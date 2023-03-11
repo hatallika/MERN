@@ -1,32 +1,15 @@
-import PostModel from '../models/Post.js';
+import ServiceModel from '../models/Service.js';
 
-export const getLastTags = async (req, res) => {
-    try {
-        const posts = await PostModel.find().limit(5).exec();
-
-        const tags = posts
-            .map(obj => obj.tags)
-            .flat()
-            .slice(0, 5);
-
-        res.json(tags);
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({
-            message: 'Не удалось получить статьи',
-        });
-    }
-}
 
 export const getAll = async (req, res) => {
     try {
-        const posts = await PostModel.find().populate('user').exec(); //связь с user
+        const services = await ServiceModel.find();
 
-        res.json(posts);
+        res.json(services);
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось получить статьи',
+            message: 'Не удалось получить писок услуг',
         });
     }
 }
@@ -35,7 +18,7 @@ export const getOne = async (req, res) => {
     try {
         const postId = req.params.id; //вытащили динамический параметр из запроса /posts/:id
 
-        PostModel.findOneAndUpdate(
+        ServiceModel.findOneAndUpdate(
             {
                 _id: postId, // найти по id
             },
@@ -49,29 +32,28 @@ export const getOne = async (req, res) => {
         ).then(
             doc => {
                 console.log(doc);
-
                 res.json(doc);//вернем документ (статья)
             },
         ).catch(err => {
             console.log(err);
             return res.status(404).json({
-                message: 'Статья не найдена',
+                message: 'Услуга не найдена',
             });
         });
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось получить статью'
+            message: 'Не удалось получить данные об услуге'
         });
     }
 };
 
 export const remove = async (req, res) => {
     try {
-        const postId = req.params.id;
+        const serviceId = req.params.id;
 
-        PostModel.findOneAndDelete({
-            _id: postId,
+        ServiceModel.findOneAndDelete({
+            _id: serviceId,
         }, ).then( () => {
             res.json({
                 success:true,
@@ -79,51 +61,52 @@ export const remove = async (req, res) => {
         }).catch(err => {
             console.log(err);
             res.status(404).json({
-                message: 'Статья не найдена'
+                message: 'Услуга не найдена'
             });
         });
     } catch(err){
         console.log(err);
         res.join({
-            message: 'Не удалось удалить статью'
+            message: 'Не удалось удалить Услугу'
         })
     }
 }
 
 export const create = async (req, res) => {
     try {
-        const doc = new PostModel({
-            title: req.body.title,
-            text: req.body.text,
+        const doc = new ServiceModel({
+            name: req.body.name,
+            description: req.body.description,
             imageUrl: req.body.imageUrl,
             tags: req.body.tags,
-            user: req.userId, // авторизованный пользователь, не из запроса пользователя, а с бекенда из проверки на авторизацию (checkAuth.js)
+            price: req.body.price,
+            //employee: req.employee, // сотрудник, не из запроса пользователя, а с бекенда из проверки на авторизацию (checkAuth.js)
         });
 
-        const post = await doc.save();
-        res.json(post);
+        const service = await doc.save();
+        res.json(service);
     } catch (err){
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось создать статью',
+            message: 'Не удалось создать услугу',
         });
     }
 }
 
 export const update = async (req, res) => {
     try {
-        const postId = req.params.id;
+        const serviceId = req.params.id;
 
-        await  PostModel.updateOne(
+        await  ServiceModel.updateOne(
             {
-                _id: postId,
+                _id: serviceId,
             },
             {
-                title: req.body.title,
-                text: req.body.text,
+                name: req.body.name,
+                description: req.body.description,
                 imageUrl: req.body.imageUrl,
-                user: req.userId,
                 tags: req.body.tags,
+                price: req.body.price,
             },
         ).then(() => {
             res.json({
@@ -132,14 +115,14 @@ export const update = async (req, res) => {
         }).catch(err => {
             console.log(err);
             res.status(404).json({
-                message: 'Статья не найдена'
+                message: 'Услуга не найдена'
             });
         });
 
     } catch (err){
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось обновить статью',
+            message: 'Не удалось обновить данные услуги',
         });
     }
 }
