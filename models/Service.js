@@ -35,9 +35,6 @@ const ServiceSchema = new mongoose.Schema(
     timestamps: true,
     toJSON: { getters: true },
     },
-    {
-        toJSON: { getters: true } //this right here
-    },
 );
 
 export default  mongoose.model('Service', ServiceSchema);
