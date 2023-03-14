@@ -31,7 +31,6 @@ export const getOne = async (req, res) => {
 
         ).then(
             doc => {
-                console.log(doc);
                 res.json(doc);//вернем документ (статья)
             },
         ).catch(err => {

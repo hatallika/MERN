@@ -7,7 +7,9 @@ import {checkAuth, handleValidationErrors} from "./utils/index.js";
 import {UserController, PostController, ServiceController} from './controllers/index.js';
 
 mongoose
-    .connect('mongodb+srv://bodybalance:wwwwww@cluster0.st63z74.mongodb.net/blog?retryWrites=true&w=majority')
+
+    // .connect('mongodb+srv://bodybalance:wwwwww@cluster0.st63z74.mongodb.net/blog?retryWrites=true&w=majority')
+    .connect('mongodb://127.0.0.1:27017/bodybalance')//local
     .then(() => console.log('DB ok'))
     .catch((err) => console.log('DB error', err));
 
@@ -40,7 +42,7 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
     });
 });
 
-
+//получение тегов
 app.get('/tags', PostController.getLastTags);
 //роут Стаьи
 app.get('/posts', PostController.getAll);
