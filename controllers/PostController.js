@@ -46,10 +46,9 @@ export const getOne = async (req, res) => {
                 returnDocument: 'after', //вернуть документ после обновления
             },
 
-        ).then(
+        ).populate('user').then(
             doc => {
-                console.log(doc);
-
+                // console.log(doc);
                 res.json(doc);//вернем документ (статья)
             },
         ).catch(err => {
@@ -96,7 +95,7 @@ export const create = async (req, res) => {
             title: req.body.title,
             text: req.body.text,
             imageUrl: req.body.imageUrl,
-            tags: req.body.tags,
+            tags: req.body.tags.split(','),
             user: req.userId, // авторизованный пользователь, не из запроса пользователя, а с бекенда из проверки на авторизацию (checkAuth.js)
         });
 
@@ -123,7 +122,7 @@ export const update = async (req, res) => {
                 text: req.body.text,
                 imageUrl: req.body.imageUrl,
                 user: req.userId,
-                tags: req.body.tags,
+                tags: req.body.tags.split(','),
             },
         ).then(() => {
             res.json({
