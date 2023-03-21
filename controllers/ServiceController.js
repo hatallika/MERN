@@ -79,7 +79,8 @@ export const create = async (req, res) => {
             imageUrl: req.body.imageUrl,
             tags: req.body.tags,
             price: req.body.price,
-            //employee: req.employee, // сотрудник, не из запроса пользователя, а с бекенда из проверки на авторизацию (checkAuth.js)
+            rating:req.body.rating,
+            user: req.userId, // сотрудник, не из запроса пользователя, а с бекенда из проверки на авторизацию (checkAuth.js)
         });
 
         const service = await doc.save();

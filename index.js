@@ -3,7 +3,12 @@ import cors from 'cors';
 import fs from 'fs';
 import mongoose from "mongoose";
 import multer from 'multer';
-import {registerValidation, loginValidation, postCreateValidation} from "./validations/validations.js";
+import {
+    registerValidation,
+    loginValidation,
+    postCreateValidation,
+    serviceCreateValidation
+} from "./validations/validations.js";
 import {checkAuth, handleValidationErrors} from "./utils/index.js";
 import {UserController, PostController, ServiceController} from './controllers/index.js';
 
@@ -56,7 +61,7 @@ app.get('/posts/:id', PostController.getOne);
 //Услуги
 app.get('/services', ServiceController.getAll);
 app.get('/services/:id', ServiceController.getOne);
-app.post('/services', ServiceController.create);
+app.post('/services', checkAuth, serviceCreateValidation,handleValidationErrors, ServiceController.create);
 
 
 app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create);
