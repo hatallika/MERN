@@ -46,6 +46,22 @@ export const getOne = async (req, res) => {
         });
     }
 };
+//популярные услуги по рейтингу
+export const getByRating = async (req, res) => {
+    try {
+        const services = await ServiceModel.find().sort({rating: -1}).limit(3);
+        console.log(services);
+        res.json(services);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось получить писок услуг',
+        });
+    }
+}
+
+
+
 
 export const remove = async (req, res) => {
     try {
@@ -76,6 +92,7 @@ export const create = async (req, res) => {
         const doc = new ServiceModel({
             name: req.body.name,
             description: req.body.description,
+            text: req.body.text,
             imageUrl: req.body.imageUrl,
             tags: req.body.tags,
             price: req.body.price,

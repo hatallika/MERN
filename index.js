@@ -60,6 +60,7 @@ app.get('/posts/:id', PostController.getOne);
 
 //Услуги
 app.get('/services', ServiceController.getAll);
+app.get('/services/popular', ServiceController.getByRating);
 app.get('/services/:id', ServiceController.getOne);
 app.post('/services', checkAuth, serviceCreateValidation,handleValidationErrors, ServiceController.create);
 
