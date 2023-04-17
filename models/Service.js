@@ -9,6 +9,10 @@ const ServiceSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        text: {
+            type: String,
+            required: true,
+        },
         price: {
             type: Number,
             required: true,
@@ -23,12 +27,16 @@ const ServiceSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
-        // employee: {
-        //     type: mongoose.Schema.Types.ObjectId,
-        //     ref: 'Employee', //relationship: свойство ссылается на модель User
-        //     required: true,
-        // },
-
+        rating: {
+            type: Number,
+            default: 0,
+        },
+        //автор поста
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User', //relationship: свойство ссылается на модель User
+            required: true,
+        },
         imageUrl: String,
     },
 {

@@ -15,6 +15,15 @@ export const registerValidation = [
 export const postCreateValidation = [
   body('title', 'Введите заголовок статьи').isLength({min: 3}).isString(),//если email корректный, то пропускаем
   body('text','Введите текст статьи').isLength({min: 10}).isString(),
-  body('tags','Не верный формат тегов (укажите массив)').optional().isArray(),
+  body('tags','Не верный формат тегов').optional().isString(),
+  body('imageUrl', 'Не верная ссылка на изображение').optional().isString(),//необязательный, но если придет, проверим на ссылку.
+]
+
+export const serviceCreateValidation = [
+  body('name', 'Введите название услуги').isLength({min: 3}).isString(),//если email корректный, то пропускаем
+  body('description','Введите краткое описание услуги').isLength({min: 5}).isString(),
+  body('text','Введите информацию об услуге').isLength({min: 5}).isString(),
+  body('tags','Не верный формат тегов').optional().isString(),
+  body('rating','Введите число от 0 до 500').optional().isInt({min:0, max:500}),
   body('imageUrl', 'Не верная ссылка на изображение').optional().isString(),//необязательный, но если придет, проверим на ссылку.
 ]
