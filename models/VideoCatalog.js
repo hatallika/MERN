@@ -10,13 +10,16 @@ const VideoCatalogSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-
+        // category: {
+        //     type: String,
+        //     required: true,
+        // },
         //массив идентификаторов видео, относящихся к этой категории
         videos:
             [
                 {
                     type: mongoose.Schema.Types.ObjectId,
-                    ref: 'Videos',
+                    ref: 'Video',
                     required: true
                 }
             ],

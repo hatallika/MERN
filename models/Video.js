@@ -13,15 +13,17 @@ const VideoSchema = new mongoose.Schema(
 
         // URL видео на YouTube или другом видеохостинге
         videoUrl: {
-            type: String
+            type: String,
+            required: true
         },
 
         //уникальный идентификатор категории, к которой относится видео
-        category: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'VideoCatalog',
-            required: true
-        }
+        catalog: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'VideoCatalog'
+            }
+        ]
     },
     {
         timestamps: true

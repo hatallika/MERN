@@ -15,6 +15,8 @@ const OnlineRehabilitationSchema = new mongoose.Schema(
             default: []
         },
 
+        imageUrl: String,
+
         //связываем с конкретным сотрудником
         user: {
             type: mongoose.Schema.Types.ObjectId,
