@@ -80,7 +80,7 @@ app.get('/online_rehabilitation', OnlineRehabilitationController.getAll);
 app.post('/online_rehabilitation', onlineRehabilitationValidation, handleValidationErrors, OnlineRehabilitationController.create);
 
 //Тренировки
-app.get('/training', TrainingController.getAll);
+app.get('/training', TrainingController.getCatalog);
 app.get('/training/:id', TrainingController.getVideos);
 
 app.post('/training', catalogVideoCreateValidation, handleValidationErrors, TrainingController.createCatalog);

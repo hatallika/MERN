@@ -32,13 +32,14 @@ export const catalogVideoCreateValidation = [
   body('name', 'Введите название каталога').isLength({min: 3}).isString(),
   body('description','Введите краткое описание каталога').isLength({min: 5}).isString(),
   body('imageUrl', 'Неверная ссылка на изображение').optional().isString(),
-  // body('category', 'Неверная название категории').isLength({min: 2}).isString(),
+  body('category', 'Неверная название категории').isLength({min: 2}).isString(),
 ]
 
 export const videoCreateValidation = [
   body('title', 'Введите заголовок видео').isLength({min: 3}).isString(),
   body('description','Введите описание видео').isLength({min: 5}).isString(),
-  body('videoUrl', 'Неверная ссылка на видео').optional().isString()
+  body('videoUrl', 'Неверная ссылка на видео').optional().isString(),
+  body('category', 'Неверная название категории').isLength({min: 2}).isString(),
 ]
 
 export const onlineRehabilitationValidation = [

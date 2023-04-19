@@ -20,8 +20,7 @@ const OnlineRehabilitationSchema = new mongoose.Schema(
         //связываем с конкретным сотрудником
         user: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
+            ref: 'User'
         }
     },
     {

@@ -17,13 +17,17 @@ const VideoSchema = new mongoose.Schema(
             required: true
         },
 
+        category: {
+            type: String,
+            required: true,
+        }
+
         //уникальный идентификатор категории, к которой относится видео
-        catalog: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'VideoCatalog'
-            }
-        ]
+        // catalog:
+        //     {
+        //         type: mongoose.Schema.Types.ObjectId,
+        //         ref: 'VideoCatalog'
+        //     }
     },
     {
         timestamps: true

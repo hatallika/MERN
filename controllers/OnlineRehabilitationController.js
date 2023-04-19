@@ -16,18 +16,17 @@ export const getAll = async (req, res) => {
 export const create = async (req, res) => {
     try {
         const doc = new OnlineRehabilitationModel(
-            req.body
-            // {
-            //     name: req.body.name,
-            //     description: req.body.description,
-            //     treatment: req.body.treatment,
-            //     imageUrl: req.body.imageUrl,
-            //     user:req.userId,
-            // }
+            {
+                name: req.body.name,
+                description: req.body.description,
+                treatment: req.body.treatment,
+                imageUrl: req.body.imageUrl
+            }
         );
 
         const service = await doc.save();
         res.json(service);
+
     } catch (err) {
         console.log(err);
         res.status(500).json({

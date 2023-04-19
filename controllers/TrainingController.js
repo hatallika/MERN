@@ -1,7 +1,7 @@
 import VideoCatalogModel from '../models/VideoCatalog.js';
 import VideoModel from "../models/Video.js";
 
-export const getAll = async (req, res) => {
+export const getCatalog = async (req, res) => {
     try {
         const trainingList = await VideoCatalogModel.find();
 
@@ -18,16 +18,20 @@ export const getVideos = async (req, res) => {
     try {
         const id = req.params.id;
 
-        const foundVideos = await VideoModel.find(
-            {
-                catalog: id
-            }
-        ).populate('VideoCatalog')
+        const foundCatalog = await VideoCatalogModel.findById(id).populate('videos');
 
-        res.json(foundVideos);
+        if (!foundCatalog) {
+            res.status(404).json({
+                message: 'Каталог не найден',
+            });
+        }
 
-        console.log(id)
-        console.log(foundVideos)
+        const videosId = foundCatalog.videos
+
+        //$in выбирает все документы, в которых значение поля содержится в массиве значений.
+        const videoList = await VideoModel.find({_id: {$in: videosId}})
+
+        res.json(videoList)
 
     } catch (err) {
         console.log(err);
@@ -44,7 +48,7 @@ export const createCatalog = async (req, res) => {
             name: req.body.name,
             description: req.body.description,
             imageUrl: req.body.imageUrl,
-            // category: req.body.category,
+            category: req.body.category
         })
 
         const catalog = await doc.save();
@@ -60,22 +64,30 @@ export const createCatalog = async (req, res) => {
 
 export const createVideo = async (req, res) => {
     try {
-        const catalog = await VideoCatalogModel.findById(req.body.catalog);
-
         const doc = new VideoModel(
-            // req.body
             {
                 title: req.body.title,
                 description: req.body.description,
                 videoUrl: req.body.videoUrl,
-                catalog: catalog
+                category: req.body.category
             }
         );
 
-        const video = await doc.save();
-        res.json(video);
+        const video = await doc.save()
+        const catalog = await VideoCatalogModel.findOne({category: doc.category});
 
-    } catch (err) {
+        if (catalog) {
+            catalog.videos.push(video._id)
+            await catalog.save();
+        }
+
+        res.status(200).json({
+            message: "Видео добавлено!",
+            video: video
+        });
+
+    } catch
+        (err) {
         console.log(err);
         res.status(500).json({
             message: 'Не удалось создать видео',
