@@ -76,8 +76,8 @@ app.delete('/posts/:id', checkAuth, PostController.remove);
 app.patch('/posts/:id', checkAuth, postCreateValidation, handleValidationErrors, PostController.update);
 
 //Онлайн-реабилитация
-app.get('/online_rehabilitation', OnlineRehabilitationController.getAll);
-app.post('/online_rehabilitation', onlineRehabilitationValidation, handleValidationErrors, OnlineRehabilitationController.create);
+app.get('/online-rehabilitation', OnlineRehabilitationController.getAll);
+app.post('/online-rehabilitation', onlineRehabilitationValidation, handleValidationErrors, OnlineRehabilitationController.create);
 
 //Тренировки
 app.get('/training', TrainingController.getCatalog);
