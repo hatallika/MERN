@@ -15,6 +15,7 @@ export const registerValidation = [
 export const postCreateValidation = [
   body('title', 'Введите заголовок статьи').isLength({min: 3}).isString(),//если email корректный, то пропускаем
   body('text','Введите текст статьи').isLength({min: 10}).isString(),
+
   body('tags','Неверный формат тегов').optional().isString(),
   body('imageUrl', 'Неверная ссылка на изображение').optional().isString(),//необязательный, но если придет, проверим на ссылку.
 ]
@@ -47,4 +48,8 @@ export const onlineRehabilitationValidation = [
   body('description','Введите описание услуги').isLength({min: 5}).isString(),
   body('treatment', 'Введите описание методы лечения').optional().isArray(),
   body('imageUrl', 'Неверная ссылка на изображение').optional().isString(),
+  body('tags','Не верный формат тегов').optional().isString(),
+  body('rating','Введите число от 0 до 500').optional().isInt({min:0, max:500}),
+  body('imageUrl', 'Не верная ссылка на изображение').optional().isString(),//необязательный, но если придет, проверим на ссылку.
+
 ]
