@@ -22,7 +22,7 @@ mongoose
 
     // .connect('mongodb+srv://bodybalance:wwwwww@cluster0.st63z74.mongodb.net/blog?retryWrites=true&w=majority')
     // .connect('mongodb://127.0.0.1:27017/bodybalance')//local
-    .connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/blog')//environment variables
+    .connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/bodybalance')//environment variables
     .then(() => console.log('DB ok'))
     .catch((err) => console.log('DB error', err));
 
