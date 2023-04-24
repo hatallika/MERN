@@ -7,7 +7,12 @@ import {
     registerValidation,
     loginValidation,
     postCreateValidation,
-    serviceCreateValidation, catalogVideoCreateValidation, videoCreateValidation, onlineRehabilitationValidation
+    serviceCreateValidation,
+    catalogVideoCreateValidation,
+    videoCreateValidation,
+    onlineRehabilitationValidation,
+    customerCreateValidation,
+    appointmentCreateValidation,
 } from "./validations/validations.js";
 import {checkAuth, handleValidationErrors} from "./utils/index.js";
 import {
@@ -15,7 +20,9 @@ import {
     PostController,
     ServiceController,
     OnlineRehabilitationController,
-    TrainingController
+    TrainingController,
+    CustomerController,
+    AppointmentController,
 } from './controllers/index.js';
 
 mongoose
@@ -70,7 +77,7 @@ app.get('/services/popular', ServiceController.getByRating);
 app.get('/services/:id', ServiceController.getOne);
 app.post('/services', checkAuth, serviceCreateValidation, handleValidationErrors, ServiceController.create);
 
-
+//Посты
 app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create);
 app.delete('/posts/:id', checkAuth, PostController.remove);
 app.patch('/posts/:id', checkAuth, postCreateValidation, handleValidationErrors, PostController.update);
@@ -86,6 +93,24 @@ app.get('/training/:id', TrainingController.getVideos);
 app.post('/training', catalogVideoCreateValidation, handleValidationErrors, TrainingController.createCatalog);
 app.post('/video', videoCreateValidation, handleValidationErrors, TrainingController.createVideo);
 
+
+//Покупатели (записались на услугу, попали на прием, обратились в сервис)
+app.get('/customers', CustomerController.getAll);
+app.get('/customers/:id', CustomerController.getOne);
+app.post('/customers', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.create);
+app.delete('/customers/:id', checkAuth, CustomerController.remove);
+app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
+
+//Запись на прием
+//Покупатели (записались на услугу, попали на прием, обратились в сервис)
+app.get('/appointments', AppointmentController.getAll);
+app.get('/appointments/:id', AppointmentController.getOne);
+app.post('/appointments', appointmentCreateValidation, handleValidationErrors, AppointmentController.create);
+app.delete('/appointments/:id', checkAuth, AppointmentController.remove);
+app.patch('/appointments/:id', checkAuth, appointmentCreateValidation, handleValidationErrors, AppointmentController.update);
+
+
+//Сервер
 app.listen(process.env.PORT || 4444, (err) => { //запустить сервер
     if (err) {
         return console.log(err);
