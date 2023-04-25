@@ -13,6 +13,7 @@ import {
     onlineRehabilitationValidation,
     customerCreateValidation,
     appointmentCreateValidation,
+    employerCreateValidation,
 } from "./validations/validations.js";
 import {checkAuth, handleValidationErrors} from "./utils/index.js";
 import {
@@ -23,6 +24,7 @@ import {
     TrainingController,
     CustomerController,
     AppointmentController,
+    EmployerController,
 } from './controllers/index.js';
 
 mongoose
@@ -102,6 +104,14 @@ app.get('/customer/byphone', CustomerController.getOneByPhone); //для кли�
 app.post('/customers', customerCreateValidation, handleValidationErrors, CustomerController.create);
 app.delete('/customers/:id', checkAuth, CustomerController.remove);
 app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
+
+//Сотрудники
+//Покупатели (записались на услугу, попали на прием, обратились в сервис)
+app.get('/employers', EmployerController.getAll);
+app.get('/employers/:id', EmployerController.getOne);
+app.post('/employers', employerCreateValidation, handleValidationErrors, EmployerController.create);
+app.delete('/employers/:id', checkAuth, EmployerController.remove);
+app.patch('/employers/:id', checkAuth, employerCreateValidation, handleValidationErrors, EmployerController.update);
 
 //Запись на прием
 //Покупатели (записались на услугу, попали на прием, обратились в сервис)

@@ -61,6 +61,11 @@ export const customerCreateValidation = [
   body('phone', 'Неверный формат телефона').isInt(),
 ]
 
+export const employerCreateValidation = [
+  body('profession','Укажите профессию').isLength({min: 3}),
+  body('imageUrl', 'Не верная ссылка на изображение').optional().isString(),//необязательный, но если придет, проверим на ссылку.
+]
+
 export const appointmentCreateValidation = [
   body('dateTime','Выберите дату и время').isISO8601().toDate(),
 ]
