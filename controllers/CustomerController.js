@@ -71,6 +71,34 @@ export const getOneByEmail = async (req, res) => {
     }
 };
 
+export const getOneByPhone = async (req, res) => {
+    try {
+        const customerPhone = req.query.phone;
+
+        CustomerModel.findOne(
+            {
+                phone: customerPhone,
+            },
+
+        ).then(
+            doc => {
+                res.json(doc);//вернем документ (статья)
+            },
+        ).catch(err => {
+            console.log(err);
+            return res.status(404).json({
+                message: 'Покупатель не найден',
+            });
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось найти покупателя'
+        });
+    }
+};
+
 
 
 export const remove = async (req, res) => {

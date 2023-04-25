@@ -69,6 +69,12 @@ export const remove = async (req, res) => {
 export const create = async (req, res) => {
     try {
         const doc = new AppointmentModel({
+            firstName: req.body.firstName,
+            secondName: req.body.secondName,
+            patronymic: req.body.patronymic,
+            phone: req.body.phone,
+            email: req.body.email,
+            user: req.userId,
             service: req.body.service,
             customer: req.body.customer,
             employer: req.body.employer,
@@ -94,6 +100,12 @@ export const update = async (req, res) => {
                 _id: customerId,
             },
             {
+                firstName: req.body.firstName,
+                secondName: req.body.secondName,
+                patronymic: req.body.patronymic,
+                phone: req.body.phone,
+                email: req.body.email,
+                user: req.userId,
                 service: req.body.service,
                 customer: req.body.customer,
                 employer: req.body.employer,

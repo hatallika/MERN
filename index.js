@@ -97,7 +97,8 @@ app.post('/video', videoCreateValidation, handleValidationErrors, TrainingContro
 //Покупатели (записались на услугу, попали на прием, обратились в сервис)
 app.get('/customers', CustomerController.getAll);
 app.get('/customers/:id', CustomerController.getOne);
-app.get('/customer/byemail', CustomerController.getOneByEmail);
+app.get('/customer/byemail', CustomerController.getOneByEmail); //для клиентской базы
+app.get('/customer/byphone', CustomerController.getOneByPhone); //для клиентской базы
 app.post('/customers', customerCreateValidation, handleValidationErrors, CustomerController.create);
 app.delete('/customers/:id', checkAuth, CustomerController.remove);
 app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);

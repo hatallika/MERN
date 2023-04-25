@@ -58,7 +58,7 @@ export const customerCreateValidation = [
   body('secondName','Укажите Фамилию').isLength({min: 3}),
   body('patronymic','Укажите Отчество').optional().isLength({min: 3}),
   body('email', 'Неверный формат почты').isEmail(),//если email корректный, то пропускаем
-  body('phone', 'Неверный формат телефона').isMobilePhone('ru-RU'),
+  body('phone', 'Неверный формат телефона').isInt(),
 ]
 
 export const appointmentCreateValidation = [
