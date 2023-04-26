@@ -13,6 +13,19 @@ const EmployerSchema = new mongoose.Schema({
             required: true, // false?//достаточно ли email?
         },
         imageUrl: String,
+
+        description: {
+            type: String,
+            required: true,
+        },
+        text: {
+            type: String,
+            required: true,
+        },
+        certificates: {
+            type: Array,
+            default: [], //опционально если не укажутся теги, будет пустой массив.
+        },
     },
     {
         timestamps: true,

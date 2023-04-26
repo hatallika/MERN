@@ -62,8 +62,11 @@ export const customerCreateValidation = [
 ]
 
 export const employerCreateValidation = [
+  body('text', 'Введите описание достижений').isLength({min: 3}).isString(),
+  body('description','Введите описание карточки врача').isLength({min: 3}).isString(),
   body('profession','Укажите профессию').isLength({min: 3}),
   body('imageUrl', 'Не верная ссылка на изображение').optional().isString(),//необязательный, но если придет, проверим на ссылку.
+  body('certificates','Не верный формат документов').optional().isArray(),
 ]
 
 export const appointmentCreateValidation = [

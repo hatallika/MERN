@@ -68,6 +68,9 @@ export const create = async (req, res) => {
             profession: req.body.profession,
             imageUrl: req.body.imageUrl,
             user: req.body.user,
+            description: req.body.description,
+            text: req.body.text,
+            certificates: req.body.certificates,
         });
 
         const employer = await doc.save();
@@ -92,6 +95,9 @@ export const update = async (req, res) => {
                 profession: req.body.profession,
                 imageUrl: req.body.imageUrl,
                 user: req.body.user,
+                description: req.body.description,
+                text: req.body.text,
+                certificates: req.body.certificates,
             },
         ).then(() => {
             res.json({
