@@ -51,5 +51,24 @@ export const onlineRehabilitationValidation = [
   body('tags','Не верный формат тегов').optional().isString(),
   body('rating','Введите число от 0 до 500').optional().isInt({min:0, max:500}),
   body('imageUrl', 'Не верная ссылка на изображение').optional().isString(),//необязательный, но если придет, проверим на ссылку.
+]
 
+export const customerCreateValidation = [
+  body('firstName','Укажите имя').isLength({min: 3}),
+  body('secondName','Укажите Фамилию').isLength({min: 3}),
+  body('patronymic','Укажите Отчество').optional().isLength({min: 3}),
+  body('email', 'Неверный формат почты').isEmail(),//если email корректный, то пропускаем
+  body('phone', 'Неверный формат телефона').isInt(),
+]
+
+export const employerCreateValidation = [
+  body('text', 'Введите описание достижений').isLength({min: 3}).isString(),
+  body('description','Введите описание карточки врача').isLength({min: 3}).isString(),
+  body('profession','Укажите профессию').isLength({min: 3}),
+  body('imageUrl', 'Не верная ссылка на изображение').optional().isString(),//необязательный, но если придет, проверим на ссылку.
+  body('certificates','Не верный формат документов').optional().isArray(),
+]
+
+export const appointmentCreateValidation = [
+  body('dateTime','Выберите дату и время').isISO8601().toDate(),
 ]
