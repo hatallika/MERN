@@ -98,6 +98,7 @@ export const create = async (req, res) => {
             price: req.body.price,
             rating:req.body.rating,
             user: req.userId, // сотрудник, не из запроса пользователя, а с бекенда из проверки на авторизацию (checkAuth.js)
+            employer: req.body.employer,
         });
 
         const service = await doc.save();
@@ -121,9 +122,12 @@ export const update = async (req, res) => {
             {
                 name: req.body.name,
                 description: req.body.description,
+                text: req.body.text,
                 imageUrl: req.body.imageUrl,
                 tags: req.body.tags,
                 price: req.body.price,
+                rating:req.body.rating,
+                employer: req.body.employer,
             },
         ).then(() => {
             res.json({

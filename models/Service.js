@@ -37,6 +37,10 @@ const ServiceSchema = new mongoose.Schema(
             ref: 'User', //relationship: свойство ссылается на модель User
             required: true,
         },
+        employer: { // какой сотрудник исполняет эту услугу по умолчанию
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Employer', //relationship: свойство ссылается на модель User
+        },
         imageUrl: String,
     },
 {
