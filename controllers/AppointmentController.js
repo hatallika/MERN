@@ -1,4 +1,5 @@
 import AppointmentModel from "../models/Appointment.js";
+import jwt from "jsonwebtoken";
 
 export const getAll = async (req, res) => {
     try {
@@ -68,6 +69,13 @@ export const remove = async (req, res) => {
 
 export const create = async (req, res) => {
     try {
+        const token = (req.headers.authorization || '').replace(/Bearer\s?/, ''); // удалили Bearer  в ответе Insomnia по Auth - Bearer запросу
+
+        if (token) {
+            const decoded = jwt.verify(token, 'secret123');
+            req.userId = decoded._id; //если авторизован запишем userid клиента
+        }
+
         const doc = new AppointmentModel({
             firstName: req.body.firstName,
             secondName: req.body.secondName,
