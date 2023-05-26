@@ -43,7 +43,7 @@ const AppointmentSchema = new mongoose.Schema({
         customer: { //для статистики. Имя, Фамилия, почта, телефон
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Customer', //relationship: свойство ссылается на модель User
-            required: true,
+            required: false,
         },
     },
     {
