@@ -1,22 +1,41 @@
 import mongoose from "mongoose";
+
 const UserSchema = new mongoose.Schema({
-    fullName: {
-        type: String,
-        required: true,
+        fullName: {
+            type: String,
+            required: true,
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        passwordHash: {
+            type: String,
+            required: true,
+        },
+        role: {
+            type: String,
+            enum: ["employer", "customer"],
+            default: "customer",
+        },
+        avatarUrl: String,
+        superAdmin: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
+        customer: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Customer', //relationship: свойство ссылается на модель User
+        },
+        employer: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Employer', //relationship: свойство ссылается на модель User
+        },
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
+    {
+        timestamps: true,
     },
-    passwordHash: {
-        type: String,
-        required: true,
-    },
-    avatarUrl: String,
-},
-{
-    timestamps: true,
-},
-    );
-export default  mongoose.model('User', UserSchema);
+);
+export default mongoose.model('User', UserSchema);

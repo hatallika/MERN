@@ -180,3 +180,25 @@ export const update = async (req, res) => {
         });
     }
 }
+
+export const findByUser = async (req,res) => {
+    try {
+        const userId = req.params.user;
+
+        CustomerModel.find({user: userId}).then(
+            doc => {
+                res.json(doc);
+            },
+        ).catch(err => {
+            console.log(err);
+            res.status(404).json({
+                message: 'Пользователь не найден'
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Такой пользователь не найден среди покупателей',
+        });
+    }
+}

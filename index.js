@@ -60,6 +60,7 @@ app.use('/uploads', express.static('uploads')); //читать uploads папк�
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
 app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register);
 app.get('/auth/me', checkAuth, UserController.getMe);//
+app.get('/users', checkAuth, UserController.getAll);//
 
 app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
     res.json({
@@ -79,10 +80,6 @@ app.get('/services/popular', ServiceController.getByRating);
 app.get('/services/:id', ServiceController.getOne);
 app.post('/services', checkAuth, serviceCreateValidation, handleValidationErrors, ServiceController.create);
 
-//Посты
-app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create);
-app.delete('/posts/:id', checkAuth, PostController.remove);
-app.patch('/posts/:id', checkAuth, postCreateValidation, handleValidationErrors, PostController.update);
 
 //Онлайн-реабилитация
 app.get('/online-rehabilitation', OnlineRehabilitationController.getAll);
@@ -97,13 +94,15 @@ app.post('/video', videoCreateValidation, handleValidationErrors, TrainingContro
 
 
 //Покупатели (записались на услугу, попали на прием, обратились в сервис)
-app.get('/customers', CustomerController.getAll);
+app.get('/customers/auth', UserController.getCustomers); // оболочки
+app.get('/customers', CustomerController.getAll); // оболочки
 app.get('/customers/:id', CustomerController.getOne);
 app.get('/customer/byemail', CustomerController.getOneByEmail); //для клиентской базы
 app.get('/customer/byphone', CustomerController.getOneByPhone); //для клиентской базы
 app.post('/customers', customerCreateValidation, handleValidationErrors, CustomerController.create);
 app.delete('/customers/:id', checkAuth, CustomerController.remove);
 app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
+app.get('/customers/byuser/:user',checkAuth, CustomerController.findByUser); //есть ли такой пользователь в полкупателях
 
 //Сотрудники
 //Покупатели (записались на услугу, попали на прием, обратились в сервис)

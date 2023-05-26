@@ -13,11 +13,11 @@ const CustomerSchema = new mongoose.Schema({
         },
         patronymic: String, // фамилия, если понадобится
 
-        user: { //если авторизован
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User', //relationship: свойство ссылается на модель User
-            required: false,
-        },
+        // user: { //если авторизован
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     ref: 'User', //relationship: свойство ссылается на модель User
+        //     required: false,
+        // },
         phone: {
             type: String,
             required: true, // false?//достаточно ли email?

@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import UserModel from "../models/User.js";
 import jwt from "jsonwebtoken";
+import PostModel from "../models/Post.js";
 
 export const register = async (req, res) => {
     try {
@@ -106,3 +107,29 @@ export const getMe = async (req,res) => {
         });
     }
 };
+
+export const getAll = async (req, res) => {
+    try {
+        const users = await UserModel.find().exec(); //связь с user
+
+        res.json(users);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось получить пользователей',
+        });
+    }
+}
+
+export const getCustomers = async (req, res) => {
+    try {
+        const customers = await UserModel.find({'role' : 'customer'}).populate('customer').exec(); //связь с user
+
+        res.json(customers);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось получить покупателей',
+        });
+    }
+}
