@@ -86,6 +86,7 @@ export const create = async (req, res) => {
             service: req.body.service,
             customer: req.body.customer,
             employer: req.body.employer,
+            text: req.body.text,
             dateTime: req.body.dateTime,
         });
 
