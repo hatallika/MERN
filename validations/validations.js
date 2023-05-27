@@ -69,6 +69,10 @@ export const employerCreateValidation = [
   body('certificates','Не верный формат документов').optional().isArray(),
 ]
 
+export const workTimeCreateValidation = [
+  body('dateTime','Выберите дату и время').isISO8601().toDate(),
+]
+
 export const appointmentCreateValidation = [
   body('dateTime','Выберите дату и время').isISO8601().toDate(),
 ]

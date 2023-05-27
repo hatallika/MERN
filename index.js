@@ -13,7 +13,7 @@ import {
     onlineRehabilitationValidation,
     customerCreateValidation,
     appointmentCreateValidation,
-    employerCreateValidation,
+    employerCreateValidation, workTimeCreateValidation,
 } from "./validations/validations.js";
 import {checkAuth, handleValidationErrors} from "./utils/index.js";
 import {
@@ -25,6 +25,7 @@ import {
     CustomerController,
     AppointmentController,
     EmployerController,
+    WorkTimeController,
 } from './controllers/index.js';
 
 mongoose
@@ -120,7 +121,9 @@ app.post('/appointments', appointmentCreateValidation, handleValidationErrors, A
 app.delete('/appointments/:id', checkAuth, AppointmentController.remove);
 app.patch('/appointments/:id', checkAuth, appointmentCreateValidation, handleValidationErrors, AppointmentController.update);
 
-
+//Рабочие часы сотрудников
+app.get('/worktime/employer/:id', WorkTimeController.getByEmployer);
+app.post('/worktime', workTimeCreateValidation, handleValidationErrors, WorkTimeController.create);
 //Сервер
 app.listen(process.env.PORT || 4444, (err) => { //запустить сервер
     if (err) {
