@@ -7,12 +7,13 @@ const WorkTimeSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User', //relationship: свойство ссылается на модель User
             required: true,
+            unique: true,
         },
 
-        dateTime: { // Из формы идет формат "2023-04-24 15:00"
-            type: Date,
-            required: true,
-        },
+        workTime: {
+            type: Array,
+            default: [Date],
+        }
     },
     {
         timestamps: true,

@@ -70,7 +70,7 @@ export const employerCreateValidation = [
 ]
 
 export const workTimeCreateValidation = [
-  body('dateTime','Выберите дату и время').isISO8601().toDate(),
+  body('workTime','Укажите список дат').isArray(),
 ]
 
 export const appointmentCreateValidation = [

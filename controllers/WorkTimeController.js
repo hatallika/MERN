@@ -26,13 +26,17 @@ export const getByEmployer = async (req, res) => {
     }
 }
 
-export const remove = async (req, res) => {
+export const removeDateForUser = async (req, res) => {
     try {
-        const workTimeId = req.params.id;
+        const employer = req.body.employer;
+        const removeDate = req.body.dateTime
 
-        WorkTimeModel.findOneAndDelete({
-            _id: workTimeId,
-        }, ).then( () => {
+        WorkTimeModel.findOneAndUpdate(
+            {
+                employer: employer,
+        },
+            {"$pull" : removeDate} )
+            .then( () => {
             res.json({
                 success:true,
             })
@@ -54,7 +58,7 @@ export const create = async (req, res) => {
     try {
         const doc = new WorkTimeModel({
             employer: req.body.employer,
-            dateTime: req.body.dateTime,
+            workTime: req.body.workTime,
         });
 
         const workTime = await doc.save();

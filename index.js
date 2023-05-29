@@ -122,6 +122,7 @@ app.delete('/appointments/:id', checkAuth, AppointmentController.remove);
 app.patch('/appointments/:id', checkAuth, appointmentCreateValidation, handleValidationErrors, AppointmentController.update);
 
 //Рабочие часы сотрудников
+app.get('/worktime', WorkTimeController.getAll);
 app.get('/worktime/employer/:id', WorkTimeController.getByEmployer);
 app.post('/worktime', workTimeCreateValidation, handleValidationErrors, WorkTimeController.create);
 //Сервер
