@@ -13,11 +13,11 @@ export const getAll = async (req, res) => {
     }
 }
 
-export const getByEmployer = async (req, res) => {
+export const getByEmployer = async (req, res) => { //Рабочий график сотрудника
     try {
         const employerId = req.params.id;
-        const workTime = await WorkTimeModel.find({employer: employerId}).exec();
-        res.json(workTime);
+        const workTime = await WorkTimeModel.findOne({employer: employerId}).exec();
+        res.json(workTime.workTime); // ["2023-05-28T16:00:00", "2023-05-28T12:00:00",]
     } catch (err){
         console.log(err);
         res.status(500).json({
