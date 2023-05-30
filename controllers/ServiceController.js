@@ -3,7 +3,7 @@ import ServiceModel from '../models/Service.js';
 
 export const getAll = async (req, res) => {
     try {
-        const services = await ServiceModel.find();
+        const services = await ServiceModel.find().populate('employer').exec();
 
         res.json(services);
     } catch (err) {
