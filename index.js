@@ -13,7 +13,7 @@ import {
     onlineRehabilitationValidation,
     customerCreateValidation,
     appointmentCreateValidation,
-    employerCreateValidation,
+    employerCreateValidation, workTimeCreateValidation,
 } from "./validations/validations.js";
 import {checkAuth, handleValidationErrors} from "./utils/index.js";
 import {
@@ -25,6 +25,7 @@ import {
     CustomerController,
     AppointmentController,
     EmployerController,
+    WorkTimeController,
 } from './controllers/index.js';
 
 mongoose
@@ -94,7 +95,7 @@ app.post('/video', videoCreateValidation, handleValidationErrors, TrainingContro
 
 
 //Покупатели (записались на услугу, попали на прием, обратились в сервис)
-app.get('/customers/auth', UserController.getCustomers); // оболочки
+app.get('/customers/auth', UserController.getCustomers); // зарегистрированные покупатели
 app.get('/customers', CustomerController.getAll); // оболочки
 app.get('/customers/:id', CustomerController.getOne);
 app.get('/customer/byemail', CustomerController.getOneByEmail); //для клиентской базы
@@ -106,7 +107,8 @@ app.get('/customers/byuser/:user',checkAuth, CustomerController.findByUser); //�
 
 //Сотрудники
 //Покупатели (записались на услугу, попали на прием, обратились в сервис)
-app.get('/employers', EmployerController.getAll);
+app.get('/employers/auth', UserController.getEmployers); // Users with role: employer
+app.get('/employers', EmployerController.getAll);// оболочки
 app.get('/employers/:id', EmployerController.getOne);
 app.post('/employers', employerCreateValidation, handleValidationErrors, EmployerController.create);
 app.delete('/employers/:id', checkAuth, EmployerController.remove);
@@ -120,7 +122,10 @@ app.post('/appointments', appointmentCreateValidation, handleValidationErrors, A
 app.delete('/appointments/:id', checkAuth, AppointmentController.remove);
 app.patch('/appointments/:id', checkAuth, appointmentCreateValidation, handleValidationErrors, AppointmentController.update);
 
-
+//Рабочие часы сотрудников
+app.get('/worktime', WorkTimeController.getAll);
+app.get('/worktime/employer/:id', WorkTimeController.getByEmployer);
+app.post('/worktime', workTimeCreateValidation, handleValidationErrors, WorkTimeController.create);
 //Сервер
 app.listen(process.env.PORT || 4444, (err) => { //запустить сервер
     if (err) {

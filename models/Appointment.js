@@ -13,7 +13,7 @@ const AppointmentSchema = new mongoose.Schema({
         },
         patronymic: String, // фамилия, если понадобится
 
-        user: { //если авторизован
+        user: { //если авторизован, кто создал встречу User auth
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User', //relationship: свойство ссылается на модель User
             required: false,
@@ -31,19 +31,20 @@ const AppointmentSchema = new mongoose.Schema({
             ref: 'Service', //relationship: свойство ссылается на модель User
             required: true,
         },
-        employer: { //пока в сотрудника на запись записываем юзера-админа. Сделать роль юзер-сотрудник.
+        employer: { //User - role: employer
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User', //relationship: свойство ссылается на модель User
             required: true,
         },
+        customer: { //User - role: customer
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User', //relationship: свойство ссылается на модель User
+            required: false,
+        },
+        text: 'String', //TODO валидация
         dateTime: { // Из формы идет формат "2023-04-24 15:00"
             type: Date,
             required: true,
-        },
-        customer: { //для статистики. Имя, Фамилия, почта, телефон
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Customer', //relationship: свойство ссылается на модель User
-            required: false,
         },
     },
     {

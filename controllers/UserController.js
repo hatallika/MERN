@@ -133,3 +133,16 @@ export const getCustomers = async (req, res) => {
         });
     }
 }
+
+export const getEmployers = async (req, res) => {
+    try {
+        const employers = await UserModel.find({'role' : 'employer'}).populate('employer').exec(); //связь с employer
+
+        res.json(employers);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось получить сотрудников',
+        });
+    }
+}

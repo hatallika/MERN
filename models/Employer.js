@@ -26,6 +26,7 @@ const EmployerSchema = new mongoose.Schema({
             type: Array,
             default: [], //опционально если не укажутся теги, будет пустой массив.
         },
+
     },
     {
         timestamps: true,
