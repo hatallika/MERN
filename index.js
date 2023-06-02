@@ -131,6 +131,7 @@ app.get('/appointments/:id', AppointmentController.getOne);
 app.post('/appointments', appointmentCreateValidation, handleValidationErrors, AppointmentController.create);
 app.delete('/appointments/:id', checkAuth, AppointmentController.remove);
 app.patch('/appointments/:id', checkAuth, appointmentCreateValidation, handleValidationErrors, AppointmentController.update);
+app.get('/appointments/employer/:id', AppointmentController.getByEmployer);
 
 //Рабочие часы сотрудников
 app.get('/worktime', WorkTimeController.getAll);
