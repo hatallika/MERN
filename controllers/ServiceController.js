@@ -50,7 +50,7 @@ export const getOne = async (req, res) => {
 export const getByRating = async (req, res) => {
     try {
         const services = await ServiceModel.find().sort({rating: -1}).limit(3);
-        console.log(services);
+
         res.json(services);
     } catch (err) {
         console.log(err);
