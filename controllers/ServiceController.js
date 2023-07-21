@@ -9,7 +9,7 @@ export const getAll = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось получить писок услуг',
+            message: 'Не удалось получить список услуг',
         });
     }
 }
