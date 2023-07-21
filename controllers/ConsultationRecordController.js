@@ -35,4 +35,32 @@ export const getAll = async (req, res) => {
     }
 }
 
+export const updateStatus = async (req, res) => {
+    try {
+
+        const {consultationId, newStatus} = req.body;
+
+        const consultation = await ConsultationRecordModel.findById(consultationId);
+
+        if (!consultation) {
+            res.status(400).json({
+                message: 'Консультация не найдена',
+            });
+        }
+
+        consultation.status = newStatus;
+
+        await consultation.save();
+
+        return res.json({message: 'Статус успешно обновлен'});
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось получить список заявок',
+        });
+    }
+}
+
+
 //Выгрузка по дате ???

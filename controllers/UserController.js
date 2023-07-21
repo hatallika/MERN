@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import UserModel from "../models/User.js";
 import jwt from "jsonwebtoken";
-import PostModel from "../models/Post.js";
 
 export const register = async (req, res) => {
     try {
@@ -95,8 +94,7 @@ export const getMe = async (req,res) => {
                 message: 'Пользователь не найден'
             });
         }
-        //если пользователь найден
-        console.log(222, user);
+
         const {passwordHash, ...userData} = user._doc;
 
         res.json(userData);

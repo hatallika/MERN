@@ -88,13 +88,13 @@ app.post('/services', checkAuth, serviceCreateValidation, handleValidationErrors
 app.get('/online-rehabilitation', OnlineRehabilitationController.getAll);
 app.post('/online-rehabilitation', onlineRehabilitationValidation, handleValidationErrors, OnlineRehabilitationController.create);
 
-//Контакты
+//Контакты - получение
 app.get('/contacts', ConsultationTopicController.getAll);
 app.post('/contacts', ConsultationRecordCreateValidation, handleValidationErrors, ConsultationRecordController.create);
 
-//ЗАПИСИ НА КОНСУЛЬТАЦИЮ
-app.get('/consultations', ConsultationRecordController.getAll);
-
+//ADMIN -- ВЫГРУЗКА КОНСУЛЬТАЦИЙ --- ЗАПИСИ ИЗ КОНТАКТОВ
+app.get('/admin/consultations', ConsultationRecordController.getAll);
+app.patch("/admin/consultations/updateStatus", handleValidationErrors, ConsultationRecordController.updateStatus)
 
 //Тренировки
 app.get('/training', TrainingController.getCatalog);

@@ -21,7 +21,13 @@ const consultationRecordSchema = new mongoose.Schema(
         },
         additionalInfo: {
             type: String
-        }
+        },
+        status: {
+            type: String,
+            enum: ['Открыто', 'В работе', 'Завершено', 'Отменено'],
+            default: 'Открыто',
+        },
+
     }, {timestamps: true}
 )
 
