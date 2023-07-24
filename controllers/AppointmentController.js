@@ -43,6 +43,33 @@ export const getOne = async (req, res) => {
     }
 };
 
+export const getByEmployer = async (req, res) => {
+    try {
+        const employerId = req.params.id; //вытащили динамический параметр из запроса
+
+
+        AppointmentModel.find(
+            {
+                'employer': employerId, // найти по id
+            },
+        ).then(
+            doc => {
+                res.json(doc);//вернем (событие)
+            },
+        ).catch(err => {
+            console.log(err);
+            return res.status(404).json({
+                message: 'События не найдены',
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось найти записи сотрудника'
+        });
+    }
+};
+
 export const remove = async (req, res) => {
     try {
         const appointmentId = req.params.id;

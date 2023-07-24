@@ -96,6 +96,7 @@ export const getMe = async (req,res) => {
             });
         }
         //если пользователь найден
+        console.log(222, user);
         const {passwordHash, ...userData} = user._doc;
 
         res.json(userData);
