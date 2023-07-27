@@ -76,3 +76,11 @@ export const workTimeCreateValidation = [
 export const appointmentCreateValidation = [
   body('dateTime','Выберите дату и время').isISO8601().toDate(),
 ]
+
+export const ConsultationRecordCreateValidation = [
+  body('topic', 'Введите описание достижений').isLength({min: 3}).isString(),
+  body('clientName','Введите описание карточки врача').isLength({min: 3}),
+  body('clientEmail','Неверный формат почты').isEmail(),
+  body('clientPhone', 'Неверный формат телефона').isInt(),
+  body('additionalInfo','Не верный формат документов').isLength({min: 3}).isString(),
+]

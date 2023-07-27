@@ -6,14 +6,15 @@ import multer from 'multer';
 import {
     registerValidation,
     loginValidation,
-    postCreateValidation,
     serviceCreateValidation,
     catalogVideoCreateValidation,
     videoCreateValidation,
     onlineRehabilitationValidation,
     customerCreateValidation,
     appointmentCreateValidation,
-    employerCreateValidation, workTimeCreateValidation,
+    employerCreateValidation,
+    workTimeCreateValidation,
+    ConsultationRecordCreateValidation,
 } from "./validations/validations.js";
 import {checkAuth, handleValidationErrors} from "./utils/index.js";
 import {
@@ -26,6 +27,8 @@ import {
     AppointmentController,
     EmployerController,
     WorkTimeController,
+    ConsultationTopicController,
+    ConsultationRecordController
 } from './controllers/index.js';
 
 mongoose
@@ -81,10 +84,17 @@ app.get('/services/popular', ServiceController.getByRating);
 app.get('/services/:id', ServiceController.getOne);
 app.post('/services', checkAuth, serviceCreateValidation, handleValidationErrors, ServiceController.create);
 
-
 //Онлайн-реабилитация
 app.get('/online-rehabilitation', OnlineRehabilitationController.getAll);
 app.post('/online-rehabilitation', onlineRehabilitationValidation, handleValidationErrors, OnlineRehabilitationController.create);
+
+//Контакты - получение
+app.get('/contacts', ConsultationTopicController.getAll);
+app.post('/contacts', ConsultationRecordCreateValidation, handleValidationErrors, ConsultationRecordController.create);
+
+//ADMIN -- ВЫГРУЗКА КОНСУЛЬТАЦИЙ --- ЗАПИСИ ИЗ КОНТАКТОВ
+app.get('/admin/consultations', ConsultationRecordController.getAll);
+app.patch("/admin/consultations/updateStatus", handleValidationErrors, ConsultationRecordController.updateStatus)
 
 //Тренировки
 app.get('/training', TrainingController.getCatalog);
@@ -103,7 +113,7 @@ app.get('/customer/byphone', CustomerController.getOneByPhone); //для кли�
 app.post('/customers', customerCreateValidation, handleValidationErrors, CustomerController.create);
 app.delete('/customers/:id', checkAuth, CustomerController.remove);
 app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
-app.get('/customers/byuser/:user',checkAuth, CustomerController.findByUser); //есть ли такой пользователь в полкупателях
+app.get('/customers/byuser/:user', checkAuth, CustomerController.findByUser); //есть ли такой пользователь в полкупателях
 
 //Сотрудники
 //Покупатели (записались на услугу, попали на прием, обратились в сервис)
@@ -127,6 +137,7 @@ app.get('/appointments/employer/:id', AppointmentController.getByEmployer);
 app.get('/worktime', WorkTimeController.getAll);
 app.get('/worktime/employer/:id', WorkTimeController.getByEmployer);
 app.post('/worktime', workTimeCreateValidation, handleValidationErrors, WorkTimeController.create);
+
 //Сервер
 app.listen(process.env.PORT || 4444, (err) => { //запустить сервер
     if (err) {

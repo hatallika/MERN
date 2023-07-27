@@ -7,3 +7,5 @@ export * as CustomerController from "./CustomerController.js";
 export * as AppointmentController from "./AppointmentController.js";
 export * as EmployerController from "./EmployerController.js";
 export * as WorkTimeController from "./WorkTimeController.js";
+export * as ConsultationTopicController from "./ConsultationTopicController.js";
+export * as ConsultationRecordController from "./ConsultationRecordController.js";
