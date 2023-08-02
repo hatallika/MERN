@@ -9,3 +9,4 @@ export * as EmployerController from "./EmployerController.js";
 export * as WorkTimeController from "./WorkTimeController.js";
 export * as ConsultationTopicController from "./ConsultationTopicController.js";
 export * as ConsultationRecordController from "./ConsultationRecordController.js";
+export * as PatientCardController from "./PatientCardController.js";
