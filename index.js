@@ -15,6 +15,7 @@ import {
     employerCreateValidation,
     workTimeCreateValidation,
     ConsultationRecordCreateValidation,
+    createPatientCardValidation,
 } from "./validations/validations.js";
 import {checkAuth, handleValidationErrors} from "./utils/index.js";
 import {
@@ -28,7 +29,8 @@ import {
     EmployerController,
     WorkTimeController,
     ConsultationTopicController,
-    ConsultationRecordController
+    ConsultationRecordController,
+    PatientCardController
 } from './controllers/index.js';
 
 mongoose
@@ -94,7 +96,12 @@ app.post('/contacts', ConsultationRecordCreateValidation, handleValidationErrors
 
 //ADMIN -- ВЫГРУЗКА КОНСУЛЬТАЦИЙ --- ЗАПИСИ ИЗ КОНТАКТОВ
 app.get('/admin/consultations', ConsultationRecordController.getAll);
-app.patch("/admin/consultations/updateStatus", handleValidationErrors, ConsultationRecordController.updateStatus)
+app.patch("/admin/consultations/updateStatus", handleValidationErrors, ConsultationRecordController.updateStatus);
+
+//ADMIN -- СОЗДАНИЕ КАРТОЧКИ ПАЦИЕНТА
+app.get('/admin/customers', handleValidationErrors, PatientCardController.getAll);
+app.post('/admin/customers', createPatientCardValidation, handleValidationErrors, PatientCardController.createPatientCard);
+app.patch('/admin/customers/:cardId', handleValidationErrors, PatientCardController.updatePatientCard)
 
 //Тренировки
 app.get('/training', TrainingController.getCatalog);

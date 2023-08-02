@@ -84,3 +84,10 @@ export const ConsultationRecordCreateValidation = [
   body('clientPhone', 'Неверный формат телефона').isInt(),
   body('additionalInfo','Не верный формат документов').isLength({min: 3}).isString(),
 ]
+
+export const createPatientCardValidation = [
+  body('userId','Поле userId обязательно для заполнения').exists(),
+  body('catalogId','Недопустимый формат значения для catalogId').optional({ nullable: true }).isMongoId(),
+  body('employerId', 'Недопустимый формат значения для employerId').optional({ nullable: true }).isMongoId(),
+  body('recommendations', 'Значение recommendations должно быть строкой').optional({ nullable: true }).isString()
+];
