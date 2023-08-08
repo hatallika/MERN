@@ -113,14 +113,17 @@ app.post('/video', videoCreateValidation, handleValidationErrors, TrainingContro
 
 //Покупатели (записались на услугу, попали на прием, обратились в сервис)
 app.get('/customers/auth', UserController.getCustomers); // зарегистрированные покупатели
-app.get('/customers', CustomerController.getAll); // оболочки
+
 app.get('/customers/:id', CustomerController.getOne);
 app.get('/customer/byemail', CustomerController.getOneByEmail); //для клиентской базы
 app.get('/customer/byphone', CustomerController.getOneByPhone); //для клиентской базы
-app.post('/customers', customerCreateValidation, handleValidationErrors, CustomerController.create);
 app.delete('/customers/:id', checkAuth, CustomerController.remove);
-app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
 app.get('/customers/byuser/:user', checkAuth, CustomerController.findByUser); //есть ли такой пользователь в полкупателях
+
+//ПРОФИЛЬ --- СОЗДАНИЕ customer ОБНОВЛЕНИЕ ДАННЫХ
+app.post('/customers', customerCreateValidation, handleValidationErrors, CustomerController.create);
+app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
+app.get('/profile', CustomerController.getAll); // вернуть всех кастомеров
 
 //Сотрудники
 //Покупатели (записались на услугу, попали на прием, обратились в сервис)

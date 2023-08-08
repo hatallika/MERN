@@ -19,7 +19,10 @@ const UserSchema = new mongoose.Schema({
             enum: ["employer", "customer"],
             default: "customer",
         },
-        avatarUrl: String,
+        avatarUrl: {
+            type: String,
+            default: ""
+        },
         superAdmin: {
             type: Boolean,
             required: true,
