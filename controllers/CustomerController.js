@@ -143,10 +143,10 @@ export const update = async (req, res) => {
 
         await CustomerModel.updateOne(
             {
-                _id: customerId,
+                userId: customerId,
             },
             {
-                userId:req.userId,//(checkAuth.js)
+                userId:req.body.userId,
                 fullName: req.body.fullName,
                 phone: req.body.phone,
                 email: req.body.email,

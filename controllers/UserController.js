@@ -2,6 +2,9 @@ import bcrypt from "bcrypt";
 import UserModel from "../models/User.js";
 import jwt from "jsonwebtoken";
 
+import fs from 'fs';
+import path from 'path';
+
 export const register = async (req, res) => {
     try {
 
@@ -11,7 +14,7 @@ export const register = async (req, res) => {
 
         const doc = new UserModel({
             email: req.body.email,
-            fullName:  req.body.fullName,
+            fullName: req.body.fullName,
             avatarUrl: req.body.avatarUrl,
             passwordHash: hash,
         });
@@ -33,7 +36,7 @@ export const register = async (req, res) => {
             ...userData,
             token,
         });
-    } catch (err){
+    } catch (err) {
         console.log(err);
         res.status(500).json({
             message: 'Не удалось зарегистрироваться',
@@ -45,7 +48,7 @@ export const login = async (req, res) => {
     try {
         const user = await UserModel.findOne({email: req.body.email});
 
-        if(!user){
+        if (!user) {
             return res.status(404).json({
                 message: 'Пользователь не найден', //лучше не уточнять почему от брутфорса
             });
@@ -53,7 +56,7 @@ export const login = async (req, res) => {
 
         const isValidPass = await bcrypt.compare(req.body.password, user._doc.passwordHash); //сравниваем введеный пароль с паролем в БД дешифруя
 
-        if (!isValidPass){
+        if (!isValidPass) {
             return res.status(400).json({
                 message: 'Не верный логин или пароль', //лучше не уточнять почему от брутфорса
             });
@@ -77,7 +80,7 @@ export const login = async (req, res) => {
             token,
         });
 
-    } catch (err){
+    } catch (err) {
         console.log(err);
         res.status(500).json({
             message: 'Не удалось авторизоваться',
@@ -85,11 +88,11 @@ export const login = async (req, res) => {
     }
 };
 
-export const getMe = async (req,res) => {
+export const getMe = async (req, res) => {
     try {
         const user = await UserModel.findById(req.userId);
 
-        if(!user) {
+        if (!user) {
             return res.status(404).json({
                 message: 'Пользователь не найден'
             });
@@ -99,7 +102,7 @@ export const getMe = async (req,res) => {
 
         res.json(userData);
 
-    } catch (err){
+    } catch (err) {
         console.log(err);
         res.status(500).json({
             message: 'Нет доступа',
@@ -122,7 +125,7 @@ export const getAll = async (req, res) => {
 
 export const getCustomers = async (req, res) => {
     try {
-        const customers = await UserModel.find({'role' : 'customer'}).populate('customer').exec(); //связь с user
+        const customers = await UserModel.find({'role': 'customer'}).populate('customer').exec(); //связь с user
 
         res.json(customers);
     } catch (err) {
@@ -135,13 +138,45 @@ export const getCustomers = async (req, res) => {
 
 export const getEmployers = async (req, res) => {
     try {
-        const employers = await UserModel.find({'role' : 'employer'}).populate('employer').exec(); //связь с employer
+        const employers = await UserModel.find({'role': 'employer'}).populate('employer').exec(); //связь с employer
 
         res.json(employers);
     } catch (err) {
         console.log(err);
         res.status(500).json({
             message: 'Не удалось получить сотрудников',
+        });
+    }
+}
+
+export const update = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const avatarUrl = `/uploads/avatars/${path.basename(req.file.filename)}`;
+
+        const user = await UserModel.findById(userId);
+
+        if (!user) {
+            return res.status(400).json({
+                message: 'Пользователь не найден',
+            });
+        }
+
+        // Удаляем старую аватарку, если она была
+        if (user.avatarUrl) {
+            const existingAvatarPath = path.join('uploads/avatars', path.basename(user.avatarUrl));
+            fs.unlinkSync(existingAvatarPath);
+        }
+
+        user.avatarUrl = avatarUrl;
+        await user.save();
+
+        return res.json({ message: 'Аватарка успешно обновлена', avatarUrl: user.avatarUrl });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось обновить сотрудников',
         });
     }
 }
