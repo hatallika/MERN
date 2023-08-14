@@ -96,7 +96,8 @@ app.get('/admin/consultations', ConsultationRecordController.getAll);
 app.patch("/admin/consultations/updateStatus", handleValidationErrors, ConsultationRecordController.updateStatus);
 
 //ADMIN -- СОЗДАНИЕ КАРТОЧКИ ПАЦИЕНТА
-app.get('/admin/customers', handleValidationErrors, PatientCardController.getAll);
+app.get('/admin/patientCards', handleValidationErrors, PatientCardController.getAll);
+app.get('/admin/customers',handleValidationErrors, UserController.getAllCustomers);
 app.post('/admin/customers', createPatientCardValidation, handleValidationErrors, PatientCardController.createPatientCard);
 app.patch('/admin/customers/:cardId', handleValidationErrors, PatientCardController.updatePatientCard)
 
@@ -106,9 +107,6 @@ app.get('/training/:id', TrainingController.getVideos);
 
 app.post('/training', catalogVideoCreateValidation, handleValidationErrors, TrainingController.createCatalog);
 app.post('/video', videoCreateValidation, handleValidationErrors, TrainingController.createVideo);
-
-//Покупатели (записались на услугу, попали на прием, обратились в сервис)
-app.get('/customers/auth', UserController.getCustomers); // зарегистрированные покупатели
 
 app.get('/customers/:id', CustomerController.getOne);
 app.get('/customer/byemail', CustomerController.getOneByEmail); //для клиентской базы

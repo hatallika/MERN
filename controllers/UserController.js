@@ -123,15 +123,30 @@ export const getAll = async (req, res) => {
     }
 }
 
-export const getCustomers = async (req, res) => {
+export const getAllCustomers = async (req, res) => {
     try {
-        const customers = await UserModel.find({'role': 'customer'}).populate('customer').exec(); //связь с user
+        const customers = await UserModel.aggregate([
+            {
+                $match: { role: 'customer' }
+            },
+            {
+                $lookup: {
+                    from: "customers",
+                    localField: "_id",
+                    foreignField: "userId",
+                    as: "customerData",
+                },
+            },
+            {
+                $sort: { "customerData.fullName": 1 } // Сортировка по полю fullName в алфавитном порядке (1 для возрастания)
+            }
+        ]);
 
         res.json(customers);
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось получить покупателей',
+            message: 'Не удалось получить информацию о пациентах',
         });
     }
 }
