@@ -2,7 +2,7 @@ import CustomerModel from "../models/Customer.js";
 
 export const getAll = async (req, res) => {
     try {
-        const customers = await CustomerModel.find().populate('user').exec(); //связь с user
+        const customers = await CustomerModel.find().populate('userId').exec(); //связь с user
 
         res.json(customers);
     } catch (err) {
@@ -15,22 +15,16 @@ export const getAll = async (req, res) => {
 
 export const getOne = async (req, res) => {
     try {
-        const customerId = req.params.id; //вытащили динамический параметр из запроса /customer/:id
+        const customerId = req.params.id;
 
-        CustomerModel.findOne(
-            {
-                _id: customerId, // найти по id
-            },
-
-        ).populate('user').then(
-            doc => {
-                // console.log(doc);
-                res.json(doc);//вернем документ (статья)
-            },
-        ).catch(err => {
+        CustomerModel.findOne({_id: customerId}).populate('user')
+            .then(doc => {
+                    res.json(doc);
+                }
+            ).catch(err => {
             console.log(err);
             return res.status(404).json({
-                message: 'Покупатель не найден',
+                message: 'Пользователь не найден',
             });
         });
 
@@ -51,7 +45,6 @@ export const getOneByEmail = async (req, res) => {
             {
                 email: customerEmail,
             },
-
         ).then(
             doc => {
                 res.json(doc);//вернем документ (статья)
@@ -79,7 +72,6 @@ export const getOneByPhone = async (req, res) => {
             {
                 phone: customerPhone,
             },
-
         ).then(
             doc => {
                 res.json(doc);//вернем документ (статья)
@@ -100,16 +92,15 @@ export const getOneByPhone = async (req, res) => {
 };
 
 
-
 export const remove = async (req, res) => {
     try {
         const customerId = req.params.id;
 
         CustomerModel.findOneAndDelete({
             _id: customerId,
-        }, ).then( () => {
+        },).then(() => {
             res.json({
-                success:true,
+                success: true,
             })
         }).catch(err => {
             console.log(err);
@@ -117,7 +108,7 @@ export const remove = async (req, res) => {
                 message: 'Покупатель не найден'
             });
         });
-    } catch(err){
+    } catch (err) {
         console.log(err);
         res.join({
             message: 'Не удалось удалить покупателя'
@@ -126,22 +117,22 @@ export const remove = async (req, res) => {
 }
 
 export const create = async (req, res) => {
+
     try {
         const doc = new CustomerModel({
-            firstName: req.body.firstName,
-            secondName: req.body.secondName,
-            patronymic: req.body.patronymic,
+            userId:req.body.userId,
+            fullName: req.body.fullName,
             phone: req.body.phone,
             email: req.body.email,
-            user: req.userId, // авторизованный пользователь, не из запроса пользователя, а с бекенда из проверки на авторизацию (checkAuth.js)
+            dateOfBirth: req.body.dateOfBirth
         });
 
         const customer = await doc.save();
         res.json(customer);
-    } catch (err){
+    } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось создать покупателя',
+            message: 'Не удалось создать пользователя',
         });
     }
 }
@@ -150,17 +141,16 @@ export const update = async (req, res) => {
     try {
         const customerId = req.params.id;
 
-        await  CustomerModel.updateOne(
+        await CustomerModel.updateOne(
             {
-                _id: customerId,
+                userId: customerId,
             },
             {
-                firstName: req.body.firstName,
-                secondName: req.body.secondName,
-                patronymic: req.body.patronymic,
+                userId:req.body.userId,
+                fullName: req.body.fullName,
                 phone: req.body.phone,
                 email: req.body.email,
-                user: req.userId,
+                dateOfBirth: req.body.dateOfBirth
             },
         ).then(() => {
             res.json({
@@ -169,19 +159,19 @@ export const update = async (req, res) => {
         }).catch(err => {
             console.log(err);
             res.status(404).json({
-                message: 'Статья не найдена'
+                message: 'Пользователь не найден'
             });
         });
 
-    } catch (err){
+    } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось обновить статью',
+            message: 'Не удалось обновить пользователя',
         });
     }
 }
 
-export const findByUser = async (req,res) => {
+export const findByUser = async (req, res) => {
     try {
         const userId = req.params.user;
 

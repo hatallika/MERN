@@ -3,6 +3,9 @@ import cors from 'cors';
 import fs from 'fs';
 import mongoose from "mongoose";
 import multer from 'multer';
+import { v4 as uuidv4 } from 'uuid';
+import path from "path";
+
 import {
     registerValidation,
     loginValidation,
@@ -44,16 +47,16 @@ mongoose
 const app = express();
 
 const storage = multer.diskStorage({
-    //функция объясняет какой путь нужно использовать
+    //путь
     destination: (_, __, cb) => {
-        if (!fs.existsSync('uploads')) {
-            fs.mkdirSync('uploads');
+        if (!fs.existsSync('uploads/avatars')) {
+            fs.mkdirSync('uploads/avatars');
         }
-        cb(null, 'uploads');
+        cb(null, 'uploads/avatars');
     },
-    //функция объяснит как называетс этот файл
+    //название файла
     filename: (_, file, cb) => {
-        cb(null, file.originalname);
+        cb(null, `${uuidv4()}${path.extname(file.originalname)}`);
     },
 });
 
@@ -65,14 +68,8 @@ app.use('/uploads', express.static('uploads')); //читать uploads папк�
 
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
 app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register);
-app.get('/auth/me', checkAuth, UserController.getMe);//
-app.get('/users', checkAuth, UserController.getAll);//
-
-app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
-    res.json({
-        url: `/uploads/${req.file.originalname}`,
-    });
-});
+app.get('/auth/me', checkAuth, UserController.getMe);
+app.get('/users', checkAuth, UserController.getAll);
 
 //получение тегов
 app.get('/tags', PostController.getLastTags);
@@ -99,7 +96,8 @@ app.get('/admin/consultations', ConsultationRecordController.getAll);
 app.patch("/admin/consultations/updateStatus", handleValidationErrors, ConsultationRecordController.updateStatus);
 
 //ADMIN -- СОЗДАНИЕ КАРТОЧКИ ПАЦИЕНТА
-app.get('/admin/customers', handleValidationErrors, PatientCardController.getAll);
+app.get('/admin/patientCards', handleValidationErrors, PatientCardController.getAll);
+app.get('/admin/customers',handleValidationErrors, UserController.getAllCustomers);
 app.post('/admin/customers', createPatientCardValidation, handleValidationErrors, PatientCardController.createPatientCard);
 app.patch('/admin/customers/:cardId', handleValidationErrors, PatientCardController.updatePatientCard)
 
@@ -110,17 +108,17 @@ app.get('/training/:id', TrainingController.getVideos);
 app.post('/training', catalogVideoCreateValidation, handleValidationErrors, TrainingController.createCatalog);
 app.post('/video', videoCreateValidation, handleValidationErrors, TrainingController.createVideo);
 
-
-//Покупатели (записались на услугу, попали на прием, обратились в сервис)
-app.get('/customers/auth', UserController.getCustomers); // зарегистрированные покупатели
-app.get('/customers', CustomerController.getAll); // оболочки
 app.get('/customers/:id', CustomerController.getOne);
 app.get('/customer/byemail', CustomerController.getOneByEmail); //для клиентской базы
 app.get('/customer/byphone', CustomerController.getOneByPhone); //для клиентской базы
-app.post('/customers', customerCreateValidation, handleValidationErrors, CustomerController.create);
 app.delete('/customers/:id', checkAuth, CustomerController.remove);
-app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
 app.get('/customers/byuser/:user', checkAuth, CustomerController.findByUser); //есть ли такой пользователь в полкупателях
+
+//ПРОФИЛЬ --- СОЗДАНИЕ customer ОБНОВЛЕНИЕ ДАННЫХ
+app.post('/customers', customerCreateValidation, handleValidationErrors, CustomerController.create);
+app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
+app.get('/profile', CustomerController.getAll); // вернуть всех кастомеров
+app.patch('/profile/updateAvatar', checkAuth, upload.single('image'), UserController.update); //ЗАГРУЗКА АВАТАРКИ (с заменой)
 
 //Сотрудники
 //Покупатели (записались на услугу, попали на прием, обратились в сервис)
