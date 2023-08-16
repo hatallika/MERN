@@ -3,7 +3,7 @@ import cors from 'cors';
 import fs from 'fs';
 import mongoose from "mongoose";
 import multer from 'multer';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import path from "path";
 
 import {
@@ -97,9 +97,10 @@ app.patch("/admin/consultations/updateStatus", handleValidationErrors, Consultat
 
 //ADMIN -- СОЗДАНИЕ КАРТОЧКИ ПАЦИЕНТА
 app.get('/admin/patientCards', handleValidationErrors, PatientCardController.getAll);
-app.get('/admin/customers',handleValidationErrors, UserController.getAllCustomers);
+app.get('/admin/customers', handleValidationErrors, UserController.getAllCustomers);
 app.post('/admin/customers', createPatientCardValidation, handleValidationErrors, PatientCardController.createPatientCard);
-app.patch('/admin/customers/:cardId', handleValidationErrors, PatientCardController.updatePatientCard)
+app.patch('/admin/customers/:cardId', handleValidationErrors, PatientCardController.updatePatientCard);
+app.post('/admin/customers/newCustomer', handleValidationErrors, UserController.createUserAndGeneratePassword)
 
 //Тренировки
 app.get('/training', TrainingController.getCatalog);
@@ -142,6 +143,10 @@ app.get('/appointments/employer/:id', AppointmentController.getByEmployer);
 app.get('/worktime', WorkTimeController.getAll);
 app.get('/worktime/employer/:id', WorkTimeController.getByEmployer);
 app.post('/worktime', workTimeCreateValidation, handleValidationErrors, WorkTimeController.create);
+
+
+//Сброс пароля
+
 
 //Сервер
 app.listen(process.env.PORT || 4444, (err) => { //запустить сервер

@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import UserModel from "../models/User.js";
 import jwt from "jsonwebtoken";
-
 import fs from 'fs';
 import path from 'path';
+import randomstring from "randomstring";
 
 export const register = async (req, res) => {
     try {
@@ -127,7 +127,7 @@ export const getAllCustomers = async (req, res) => {
     try {
         const customers = await UserModel.aggregate([
             {
-                $match: { role: 'customer' }
+                $match: {role: 'customer'}
             },
             {
                 $lookup: {
@@ -138,7 +138,7 @@ export const getAllCustomers = async (req, res) => {
                 },
             },
             {
-                $sort: { "customerData.fullName": 1 } // Сортировка по полю fullName в алфавитном порядке (1 для возрастания)
+                $sort: {"customerData.fullName": 1} // Сортировка по полю fullName в алфавитном порядке (1 для возрастания)
             }
         ]);
 
@@ -186,12 +186,38 @@ export const update = async (req, res) => {
         user.avatarUrl = avatarUrl;
         await user.save();
 
-        return res.json({ message: 'Аватарка успешно обновлена', avatarUrl: user.avatarUrl });
+        return res.json({message: 'Аватарка успешно обновлена', avatarUrl: user.avatarUrl});
 
     } catch (err) {
         console.log(err);
         res.status(500).json({
             message: 'Не удалось обновить сотрудников',
+        });
+    }
+}
+
+export const createUserAndGeneratePassword = async (req, res) => {
+    try {
+        const temporaryPassword = randomstring.generate(10);
+        const salt = await bcrypt.genSalt(10);
+        const hashTemporaryPassword = await bcrypt.hash(temporaryPassword, salt);
+
+        const user = new UserModel({
+            fullName: req.body.fullName,
+            email: req.body.email,
+            passwordHash: hashTemporaryPassword,
+        });
+
+        console.log(user)
+
+        await user.save();
+
+        res.status(200).json({message: 'Временный пользователь успешно создан!', user});
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось создать временного пользователя!',
         });
     }
 }
