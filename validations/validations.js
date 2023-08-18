@@ -91,3 +91,11 @@ export const createPatientCardValidation = [
     body('employerId', 'Недопустимый формат значения для employerId').optional({nullable: true}).isMongoId(),
     body('recommendations', 'Значение recommendations должно быть строкой').optional({nullable: true}).isString()
 ];
+
+export const createNewUserValidation = [
+    body('email', 'Неверный формат почты').isEmail(),
+    body('fullName', 'Укажите имя').isLength({min: 3}),
+    body('avatarUrl', 'Неверная ссылка на аватарку').optional().isURL(),
+    body('resetPasswordToken', 'Некорректный токен сброса пароля').optional().isString()
+];
+
