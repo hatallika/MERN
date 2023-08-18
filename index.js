@@ -101,6 +101,7 @@ app.get('/admin/customers', handleValidationErrors, UserController.getAllCustome
 app.post('/admin/customers', createPatientCardValidation, handleValidationErrors, PatientCardController.createPatientCard);
 app.patch('/admin/customers/:cardId', handleValidationErrors, PatientCardController.updatePatientCard);
 app.post('/admin/customers/newCustomer',createNewUserValidation,  handleValidationErrors, UserController.createUserAndGeneratePassword)
+app.delete('/admin/customers/removeCustomer/:id', handleValidationErrors, UserController.remove)
 
 //ИЗМЕНЕНИЕ ПАРОЛЯ ДЛЯ НОВОГО ПОЛЬЗОВАТЕЛЯ
 app.patch('/resetPassword/:token',handleValidationErrors, UserController.resetPassword)

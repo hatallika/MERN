@@ -36,7 +36,7 @@ export const getOne = async (req, res) => {
     }
 };
 
-
+//ПЕРЕДЕЛАТЬ ПОД ОДИН ЗАПРОС
 export const getOneByEmail = async (req, res) => {
     try {
         const customerEmail = req.query.email;
@@ -52,14 +52,14 @@ export const getOneByEmail = async (req, res) => {
         ).catch(err => {
             console.log(err);
             return res.status(404).json({
-                message: 'Покупатель не найден',
+                message: 'Пациент не найден!',
             });
         });
 
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось найти покупателя'
+            message: 'Не удалось найти пациента'
         });
     }
 };
@@ -74,19 +74,19 @@ export const getOneByPhone = async (req, res) => {
             },
         ).then(
             doc => {
-                res.json(doc);//вернем документ (статья)
+                res.json(doc);
             },
         ).catch(err => {
             console.log(err);
             return res.status(404).json({
-                message: 'Покупатель не найден',
+                message: 'пациент не найден!',
             });
         });
 
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось найти покупателя'
+            message: 'Не удалось найти пациента'
         });
     }
 };
@@ -101,17 +101,18 @@ export const remove = async (req, res) => {
         },).then(() => {
             res.json({
                 success: true,
+                message: 'Пациент удален!'
             })
         }).catch(err => {
             console.log(err);
             res.status(404).json({
-                message: 'Покупатель не найден'
+                message: 'Пациент не найден!'
             });
         });
     } catch (err) {
         console.log(err);
         res.join({
-            message: 'Не удалось удалить покупателя'
+            message: 'Не удалось удалить пациента'
         })
     }
 }

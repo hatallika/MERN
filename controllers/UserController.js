@@ -302,3 +302,29 @@ export const resetPassword = async (req, res) => {
         }
     }
 }
+
+
+export const remove = async (req, res) => {
+    try {
+        const userId = req.params.id;
+
+        UserModel.findOneAndDelete({
+            _id: userId,
+        },).then(() => {
+            res.json({
+                success: true,
+                message: 'Пациент удален!'
+            })
+        }).catch(err => {
+            console.log(err);
+            res.status(404).json({
+                message: 'Пациент не найден!'
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        res.join({
+            message: 'Не удалось удалить пациента'
+        })
+    }
+}
