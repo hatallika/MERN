@@ -36,6 +36,14 @@ const UserSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Employer', //relationship: свойство ссылается на модель User
         },
+        resetPasswordToken: {
+            type: String,
+            required: false,
+        },
+        resetPasswordExpires: {
+            type: Date,
+            required: false,
+        },
     },
     {
         timestamps: true,

@@ -18,7 +18,7 @@ import {
     employerCreateValidation,
     workTimeCreateValidation,
     ConsultationRecordCreateValidation,
-    createPatientCardValidation,
+    createPatientCardValidation, createNewUserValidation,
 } from "./validations/validations.js";
 import {checkAuth, handleValidationErrors} from "./utils/index.js";
 import {
@@ -100,7 +100,10 @@ app.get('/admin/patientCards', handleValidationErrors, PatientCardController.get
 app.get('/admin/customers', handleValidationErrors, UserController.getAllCustomers);
 app.post('/admin/customers', createPatientCardValidation, handleValidationErrors, PatientCardController.createPatientCard);
 app.patch('/admin/customers/:cardId', handleValidationErrors, PatientCardController.updatePatientCard);
-app.post('/admin/customers/newCustomer', handleValidationErrors, UserController.createUserAndGeneratePassword)
+app.post('/admin/customers/newCustomer',createNewUserValidation,  handleValidationErrors, UserController.createUserAndGeneratePassword)
+
+//ИЗМЕНЕНИЕ ПАРОЛЯ ДЛЯ НОВОГО ПОЛЬЗОВАТЕЛЯ
+app.patch('/resetPassword/:token',handleValidationErrors, UserController.resetPassword)
 
 //Тренировки
 app.get('/training', TrainingController.getCatalog);
