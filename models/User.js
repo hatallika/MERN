@@ -30,11 +30,11 @@ const UserSchema = new mongoose.Schema({
         },
         customer: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Customer', //relationship: свойство ссылается на модель User
+            ref: 'Customer',
         },
         employer: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Employer', //relationship: свойство ссылается на модель User
+            ref: 'Employer',
         },
         resetPasswordToken: {
             type: String,

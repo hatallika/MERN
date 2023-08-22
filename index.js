@@ -15,7 +15,6 @@ import {
     onlineRehabilitationValidation,
     customerCreateValidation,
     appointmentCreateValidation,
-    employerCreateValidation,
     workTimeCreateValidation,
     ConsultationRecordCreateValidation,
     createPatientCardValidation, createNewUserValidation,
@@ -95,16 +94,29 @@ app.post('/contacts', ConsultationRecordCreateValidation, handleValidationErrors
 app.get('/admin/consultations', ConsultationRecordController.getAll);
 app.patch("/admin/consultations/updateStatus", handleValidationErrors, ConsultationRecordController.updateStatus);
 
-//ADMIN -- СОЗДАНИЕ КАРТОЧКИ ПАЦИЕНТА
+//ADMIN -- ПАЦИЕНТА
 app.get('/admin/patientCards', handleValidationErrors, PatientCardController.getAll);
 app.get('/admin/customers', handleValidationErrors, UserController.getAllCustomers);
 app.post('/admin/customers', createPatientCardValidation, handleValidationErrors, PatientCardController.createPatientCard);
 app.patch('/admin/customers/:cardId', handleValidationErrors, PatientCardController.updatePatientCard);
-app.post('/admin/customers/newCustomer',createNewUserValidation,  handleValidationErrors, UserController.createUserAndGeneratePassword)
-app.delete('/admin/customers/removeCustomer/:id', handleValidationErrors, UserController.remove)
+app.post('/admin/customers/newCustomer', createNewUserValidation, handleValidationErrors, UserController.createUserAndGeneratePassword)
+app.delete('/admin/customers/removeCustomer/:id', checkAuth, handleValidationErrors, UserController.remove);
+
+//ADMIN-- СПЕЦИАЛИСТЫ
+app.post('/admin/specialists/newEmployer', handleValidationErrors, EmployerController.create);
+app.delete('/admin/specialists/removeEmployer/:id', handleValidationErrors, EmployerController.remove);
+
+
+//Сотрудники
+app.get('/employers', handleValidationErrors, EmployerController.getAll);
+// app.get('/employers', EmployerController.getAll);
+// app.get('/employers/:id', EmployerController.getOne);
+// app.delete('/employers/:id', checkAuth, EmployerController.remove);
+// app.patch('/employers/:id', checkAuth, employerCreateValidation, handleValidationErrors, EmployerController.update);
+
 
 //ИЗМЕНЕНИЕ ПАРОЛЯ ДЛЯ НОВОГО ПОЛЬЗОВАТЕЛЯ
-app.patch('/resetPassword/:token',handleValidationErrors, UserController.resetPassword)
+app.patch('/resetPassword/:token', handleValidationErrors, UserController.resetPassword)
 
 //Тренировки
 app.get('/training', TrainingController.getCatalog);
@@ -124,15 +136,6 @@ app.post('/customers', customerCreateValidation, handleValidationErrors, Custome
 app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
 app.get('/profile', CustomerController.getAll); // вернуть всех кастомеров
 app.patch('/profile/updateAvatar', checkAuth, upload.single('image'), UserController.update); //ЗАГРУЗКА АВАТАРКИ (с заменой)
-
-//Сотрудники
-//Покупатели (записались на услугу, попали на прием, обратились в сервис)
-app.get('/employers/auth', UserController.getEmployers); // Users with role: employer
-app.get('/employers', EmployerController.getAll);// оболочки
-app.get('/employers/:id', EmployerController.getOne);
-app.post('/employers', employerCreateValidation, handleValidationErrors, EmployerController.create);
-app.delete('/employers/:id', checkAuth, EmployerController.remove);
-app.patch('/employers/:id', checkAuth, employerCreateValidation, handleValidationErrors, EmployerController.update);
 
 //Запись на прием
 //Покупатели (записались на услугу, попали на прием, обратились в сервис)
