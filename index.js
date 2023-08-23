@@ -106,24 +106,12 @@ app.delete('/admin/customers/removeCustomer/:id', checkAuth, handleValidationErr
 app.post('/admin/specialists/newEmployer', handleValidationErrors, EmployerController.create);
 app.delete('/admin/specialists/removeEmployer/:id', handleValidationErrors, EmployerController.remove);
 
-
-//Сотрудники
-app.get('/employers', handleValidationErrors, EmployerController.getAll);
+//СОТРУДНИКИ -- ADMIN - SPECIALISTS
+app.get('/employers', handleValidationErrors, UserController.getAllEmployers);
 // app.get('/employers', EmployerController.getAll);
 // app.get('/employers/:id', EmployerController.getOne);
 // app.delete('/employers/:id', checkAuth, EmployerController.remove);
 // app.patch('/employers/:id', checkAuth, employerCreateValidation, handleValidationErrors, EmployerController.update);
-
-
-//ИЗМЕНЕНИЕ ПАРОЛЯ ДЛЯ НОВОГО ПОЛЬЗОВАТЕЛЯ
-app.patch('/resetPassword/:token', handleValidationErrors, UserController.resetPassword)
-
-//Тренировки
-app.get('/training', TrainingController.getCatalog);
-app.get('/training/:id', TrainingController.getVideos);
-
-app.post('/training', catalogVideoCreateValidation, handleValidationErrors, TrainingController.createCatalog);
-app.post('/video', videoCreateValidation, handleValidationErrors, TrainingController.createVideo);
 
 app.get('/customers/:id', CustomerController.getOne);
 app.get('/customer/byemail', CustomerController.getOneByEmail); //для клиентской базы
@@ -134,8 +122,17 @@ app.get('/customers/byuser/:user', checkAuth, CustomerController.findByUser); //
 //ПРОФИЛЬ --- СОЗДАНИЕ customer ОБНОВЛЕНИЕ ДАННЫХ
 app.post('/customers', customerCreateValidation, handleValidationErrors, CustomerController.create);
 app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
-app.get('/profile', CustomerController.getAll); // вернуть всех кастомеров
+app.get('/profile', CustomerController.getAll);
 app.patch('/profile/updateAvatar', checkAuth, upload.single('image'), UserController.update); //ЗАГРУЗКА АВАТАРКИ (с заменой)
+
+//Тренировки
+app.get('/training', TrainingController.getCatalog);
+app.get('/training/:id', TrainingController.getVideos);
+app.post('/training', catalogVideoCreateValidation, handleValidationErrors, TrainingController.createCatalog);
+app.post('/video', videoCreateValidation, handleValidationErrors, TrainingController.createVideo);
+
+//ИЗМЕНЕНИЕ ПАРОЛЯ ДЛЯ НОВОГО ПОЛЬЗОВАТЕЛЯ -- Сброс пароля
+app.patch('/resetPassword/:token', handleValidationErrors, UserController.resetPassword)
 
 //Запись на прием
 //Покупатели (записались на услугу, попали на прием, обратились в сервис)
@@ -150,9 +147,6 @@ app.get('/appointments/employer/:id', AppointmentController.getByEmployer);
 app.get('/worktime', WorkTimeController.getAll);
 app.get('/worktime/employer/:id', WorkTimeController.getByEmployer);
 app.post('/worktime', workTimeCreateValidation, handleValidationErrors, WorkTimeController.create);
-
-
-//Сброс пароля
 
 
 //Сервер

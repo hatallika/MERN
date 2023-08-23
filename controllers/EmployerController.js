@@ -2,33 +2,6 @@ import EmployerModel from '../models/Employer.js';
 import UserModel from '../models/User.js'
 import bcrypt from "bcrypt";
 
-export const getAll = async (req, res) => {
-    try {
-        const employers = await EmployerModel.aggregate([
-            {
-                $match: { user: { $exists: true } }
-            },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'user',
-                    foreignField: '_id',
-                    as: 'user'
-                }
-            },
-            {
-                $unwind: '$user'
-            }
-        ]);
-        res.json(employers);
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({
-            message: 'Не удалось получить список сотрудников',
-        });
-    }
-}
-
 export const create = async (req, res) => {
     try {
         const {
@@ -58,7 +31,7 @@ export const create = async (req, res) => {
         }
 
         const employer = await new EmployerModel({
-            user: user._id,
+            userId: user._id,
             phone,
             profession,
             description,
@@ -89,9 +62,7 @@ export const remove = async (req, res) => {
             });
         }
 
-        await EmployerModel.findOneAndDelete({
-            user: userId,
-        });
+        await EmployerModel.findOneAndDelete({userId: userId});
 
         await UserModel.findByIdAndDelete(userId);
 

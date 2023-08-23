@@ -28,14 +28,6 @@ const UserSchema = new mongoose.Schema({
             required: true,
             default: false,
         },
-        customer: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Customer',
-        },
-        employer: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Employer',
-        },
         resetPasswordToken: {
             type: String,
             required: false,

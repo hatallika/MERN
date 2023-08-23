@@ -124,6 +124,34 @@ export const getAll = async (req, res) => {
     }
 }
 
+export const getAllEmployers = async (req, res) => {
+    try {
+        const usersWithEmployers = await UserModel.aggregate([
+            {
+                $match: { role: "employer" } // Выбираем только пользователей-сотрудников
+            },
+            {
+                $lookup: {
+                    from: 'employers',
+                    localField: '_id',
+                    foreignField: 'userId',
+                    as: 'employer'
+                }
+            },
+            {
+                $unwind: '$employer'
+            }
+        ]);
+        res.json(usersWithEmployers);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось получить список пользователей со сведениями о сотрудниках',
+        });
+    }
+}
+
+
 export const getAllCustomers = async (req, res) => {
     try {
         const customers = await UserModel.aggregate([
