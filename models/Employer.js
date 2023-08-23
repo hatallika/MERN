@@ -1,32 +1,31 @@
-//Сотрудник
 import mongoose from "mongoose";
 
 const EmployerSchema = new mongoose.Schema({
-
-        user: {
+        userId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User', //relationship: свойство ссылается на модель User
+            ref: 'User',
+            required: true,
+        },
+        phone: {
+            type: String,
             required: true,
         },
         profession: {
             type: String,
-            required: true, // false?//достаточно ли email?
+            required: true,
         },
-        imageUrl: String,
-
         description: {
             type: String,
             required: true,
         },
-        text: {
+        achievements: {
             type: String,
             required: true,
         },
         certificates: {
             type: Array,
-            default: [], //опционально если не укажутся теги, будет пустой массив.
+            default: [],
         },
-
     },
     {
         timestamps: true,

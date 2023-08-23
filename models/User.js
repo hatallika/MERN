@@ -28,14 +28,6 @@ const UserSchema = new mongoose.Schema({
             required: true,
             default: false,
         },
-        customer: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Customer', //relationship: свойство ссылается на модель User
-        },
-        employer: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Employer', //relationship: свойство ссылается на модель User
-        },
         resetPasswordToken: {
             type: String,
             required: false,
