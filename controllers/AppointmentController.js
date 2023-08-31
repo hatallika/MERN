@@ -109,12 +109,15 @@ export const create = async (req, res) => {
             patronymic: req.body.patronymic,
             phone: req.body.phone,
             email: req.body.email,
-            user: req.userId,
+            // user: req.userId,
             service: req.body.service,
             customer: req.body.customer,
             employer: req.body.employer,
+            onlineRehabilitation: req.body.onlineRehabilitation,
             text: req.body.text,
-            dateTime: req.body.dateTime,
+            // dateTime: req.body.dateTime,
+            status: 'Ждет ответа',
+            source_name: req.body.source_name
         });
 
         const appointment = await doc.save();
@@ -141,11 +144,12 @@ export const update = async (req, res) => {
                 patronymic: req.body.patronymic,
                 phone: req.body.phone,
                 email: req.body.email,
-                user: req.userId,
+                // user: req.userId,
                 service: req.body.service,
                 customer: req.body.customer,
                 employer: req.body.employer,
-                dateTime: req.body.dateTime,
+                // dateTime: req.body.dateTime,
+                status: req.body.status,
             },
         ).then(() => {
             res.json({
