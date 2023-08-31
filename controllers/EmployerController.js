@@ -15,6 +15,7 @@ export const create = async (req, res) => {
 
         const temporaryPassword = await bcrypt.hash("placeholder", 10);
 
+
         const user = await new UserModel({
             fullName,
             email,

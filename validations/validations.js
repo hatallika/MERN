@@ -74,7 +74,7 @@ export const workTimeCreateValidation = [
 ]
 
 export const appointmentCreateValidation = [
-    body('dateTime', 'Выберите дату и время').isISO8601().toDate(),
+    // body('dateTime', 'Выберите дату и время').isISO8601().toDate(),
 ]
 
 export const ConsultationRecordCreateValidation = [
