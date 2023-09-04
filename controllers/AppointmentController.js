@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 export const getAll = async (req, res) => {
     try {
-        const appointments = await AppointmentModel.find().populate('service customer employer').exec(); //связь с user
+        const appointments = await AppointmentModel.find().populate('service customer employer onlineRehabilitation').exec(); //связь с user
 
         res.json(appointments);
     } catch (err) {
@@ -116,7 +116,7 @@ export const create = async (req, res) => {
             onlineRehabilitation: req.body.onlineRehabilitation,
             text: req.body.text,
             // dateTime: req.body.dateTime,
-            status: 'Ждет ответа',
+            status: 'Ждет ответ',
             source_name: req.body.source_name
         });
 
