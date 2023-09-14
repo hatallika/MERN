@@ -15,9 +15,10 @@ import {
     onlineRehabilitationValidation,
     customerCreateValidation,
     appointmentCreateValidation,
-    workTimeCreateValidation,
-    ConsultationRecordCreateValidation,
-    createPatientCardValidation, createNewUserValidation,
+    consultationRecordCreateValidation,
+    createPatientCardValidation,
+    createNewUserValidation,
+    ScheduleCreateValidation,
 } from "./validations/validations.js";
 import {checkAuth, handleValidationErrors} from "./utils/index.js";
 import {
@@ -29,7 +30,7 @@ import {
     CustomerController,
     AppointmentController,
     EmployerController,
-    WorkTimeController,
+    ScheduleController,
     ConsultationTopicController,
     ConsultationRecordController,
     PatientCardController
@@ -88,7 +89,7 @@ app.post('/online-rehabilitation', onlineRehabilitationValidation, handleValidat
 
 //Контакты - получение
 app.get('/contacts', ConsultationTopicController.getAll);
-app.post('/contacts', ConsultationRecordCreateValidation, handleValidationErrors, ConsultationRecordController.create);
+app.post('/contacts', consultationRecordCreateValidation, handleValidationErrors, ConsultationRecordController.create);
 
 //ADMIN -- ВЫГРУЗКА КОНСУЛЬТАЦИЙ --- ЗАПИСИ ИЗ КОНТАКТОВ
 app.get('/admin/consultations', ConsultationRecordController.getAll);
@@ -105,6 +106,12 @@ app.delete('/admin/customers/removeCustomer/:id', checkAuth, handleValidationErr
 //ADMIN-- СПЕЦИАЛИСТЫ
 app.post('/admin/specialists/newEmployer', handleValidationErrors, EmployerController.create);
 app.delete('/admin/specialists/removeEmployer/:id', handleValidationErrors, EmployerController.remove);
+app.patch('/admin/specialists/updateEmployer/:id', handleValidationErrors, UserController.updateEmployer)
+
+//ADMIN-- РАСПИСАНИЕ
+app.post('/admin/specialists/:employerId/schedules', ScheduleCreateValidation, handleValidationErrors, ScheduleController.create);
+app.get('/admin/specialists/schedules', handleValidationErrors, ScheduleController.getAll);
+app.delete(`/admin/schedules/:scheduleId`,handleValidationErrors, ScheduleController.remove);
 
 //СОТРУДНИКИ -- ADMIN - SPECIALISTS
 app.get('/employers', handleValidationErrors, UserController.getAllEmployers);
@@ -123,7 +130,7 @@ app.get('/customers/byuser/:user', checkAuth, CustomerController.findByUser); //
 app.post('/customers', customerCreateValidation, handleValidationErrors, CustomerController.create);
 app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
 app.get('/profile', CustomerController.getAll);
-app.patch('/profile/updateAvatar', checkAuth, upload.single('image'), UserController.update); //ЗАГРУЗКА АВАТАРКИ (с заменой)
+app.patch('/profile/updateAvatar/:id', checkAuth, upload.single('image'), UserController.updateAvatar); //ЗАГРУЗКА АВАТАРКИ (с заменой)
 
 //Тренировки
 app.get('/training', TrainingController.getCatalog);
@@ -142,12 +149,6 @@ app.post('/appointments', appointmentCreateValidation, handleValidationErrors, A
 app.delete('/appointments/:id', checkAuth, AppointmentController.remove);
 app.patch('/appointments/:id', checkAuth, appointmentCreateValidation, handleValidationErrors, AppointmentController.update);
 app.get('/appointments/employer/:id', AppointmentController.getByEmployer);
-
-//Рабочие часы сотрудников
-app.get('/worktime', WorkTimeController.getAll);
-app.get('/worktime/employer/:id', WorkTimeController.getByEmployer);
-app.post('/worktime', workTimeCreateValidation, handleValidationErrors, WorkTimeController.create);
-
 
 //Сервер
 app.listen(process.env.PORT || 4444, (err) => { //запустить сервер

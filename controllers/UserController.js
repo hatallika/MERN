@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import UserModel from "../models/User.js";
+import EmployerModel from '../models/Employer.js';
 import jwt from "jsonwebtoken";
 import fs from 'fs';
 import path from 'path';
@@ -128,7 +129,7 @@ export const getAllEmployers = async (req, res) => {
     try {
         const usersWithEmployers = await UserModel.aggregate([
             {
-                $match: { role: "employer" } // Выбираем только пользователей-сотрудников
+                $match: {role: "employer"} // Выбираем только пользователей-сотрудников
             },
             {
                 $lookup: {
@@ -193,9 +194,10 @@ export const getEmployers = async (req, res) => {
     }
 }
 
-export const update = async (req, res) => {
+export const updateAvatar = async (req, res) => {
     try {
-        const userId = req.userId;
+        const userId = req.params.id;
+
         const avatarUrl = `/uploads/avatars/${path.basename(req.file.filename)}`;
 
         const user = await UserModel.findById(userId);
@@ -216,6 +218,43 @@ export const update = async (req, res) => {
         await user.save();
 
         return res.json({message: 'Аватарка успешно обновлена', avatarUrl: user.avatarUrl});
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось обновить сотрудников',
+        });
+    }
+}
+
+export const updateEmployer = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const data = req.body;
+
+        const userData = {
+            fullName: data.fullName || null,
+            email: data.email || null,
+        };
+
+        const employerData = {
+            phone: data.employer?.phone || null,
+            profession: data.employer?.profession || null,
+            description: data.employer?.description || null,
+            achievements: data.employer?.achievements || null,
+        };
+
+        const user = await UserModel.findByIdAndUpdate(userId, userData, {new: true})
+
+        await user.save();
+
+        const employer = await EmployerModel.findOneAndUpdate({userId: userId}, employerData, {new: true})
+
+        await employer.save();
+
+        res.status(200).json({
+            message: 'Данные успешно обновлены',
+        });
 
     } catch (err) {
         console.log(err);
@@ -299,18 +338,18 @@ export const resetPassword = async (req, res) => {
     const token = req.params.token;
     const newPassword = req.body.newPassword;
 
-    if (token){
+    if (token) {
         try {
             const decoded = jwt.verify(token, 'my_secret_key');
 
             const user = await UserModel.findById(decoded.userId);
 
             if (!user) {
-                return res.status(404).json({ message: 'Пользователь не найден!' });
+                return res.status(404).json({message: 'Пользователь не найден!'});
             }
 
             if (Date.now() > user.resetPasswordExpires) {
-                return res.status(400).json({ message: 'Срок действия ссылки истек!' });
+                return res.status(400).json({message: 'Срок действия ссылки истек!'});
             }
 
             const salt = await bcrypt.genSalt(10);
@@ -321,7 +360,7 @@ export const resetPassword = async (req, res) => {
 
             await user.save();
 
-            res.status(200).json({ message: 'Пароль успешно обновлен!' });
+            res.status(200).json({message: 'Пароль успешно обновлен!'});
         } catch (e) {
             console.log(e);
             res.status(500).json({

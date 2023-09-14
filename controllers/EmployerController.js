@@ -77,32 +77,6 @@ export const remove = async (req, res) => {
     }
 }
 
-export const getOne = async (req, res) => {
-    try {
-        const employerId = req.params.id; //вытащили динамический параметр из запроса /employers/:id
-
-        EmployerModel.findOne(
-            {
-                _id: employerId, // найти по id
-            },
-        ).populate('user').then(
-            doc => {
-                res.json(doc);
-            },
-        ).catch(err => {
-            console.log(err);
-            return res.status(404).json({
-                message: 'Сотрудник не найден',
-            });
-        });
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({
-            message: 'Не удалось найти сотрудника'
-        });
-    }
-};
-
 export const update = async (req, res) => {
     try {
         const employerId = req.params.id;
@@ -137,3 +111,29 @@ export const update = async (req, res) => {
         });
     }
 }
+
+export const getOne = async (req, res) => {
+    try {
+        const employerId = req.params.id; //вытащили динамический параметр из запроса /employers/:id
+
+        EmployerModel.findOne(
+            {
+                _id: employerId, // найти по id
+            },
+        ).populate('user').then(
+            doc => {
+                res.json(doc);
+            },
+        ).catch(err => {
+            console.log(err);
+            return res.status(404).json({
+                message: 'Сотрудник не найден',
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось найти сотрудника'
+        });
+    }
+};
