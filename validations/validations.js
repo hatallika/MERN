@@ -69,15 +69,11 @@ export const employerCreateValidation = [
     body('certificates', 'Не верный формат документов').optional().isArray(),
 ]
 
-export const workTimeCreateValidation = [
-    body('workTime', 'Укажите список дат').isArray(),
-]
-
 export const appointmentCreateValidation = [
     body('dateTime', 'Выберите дату и время').isISO8601().toDate(),
 ]
 
-export const ConsultationRecordCreateValidation = [
+export const consultationRecordCreateValidation = [
     body('topic', 'Введите описание достижений').isLength({min: 3}).isString(),
     body('clientName', 'Введите описание карточки врача').isLength({min: 3}),
     body('clientEmail', 'Неверный формат почты').isEmail(),
@@ -99,3 +95,12 @@ export const createNewUserValidation = [
     body('resetPasswordToken', 'Некорректный токен сброса пароля').optional().isString()
 ];
 
+export const ScheduleCreateValidation = [
+    body('daysOfWeek.*', 'Дни недели должны быть строками').isString(),
+    body('schedules.*.startTime', 'Время начала должно быть в правильном формате').matches(/^([0-2][0-9]):([0-5][0-9])$/),
+    body('schedules.*.endTime', 'Время окончания должно быть в правильном формате').matches(/^([0-2][0-9]):([0-5][0-9])$/),
+    body('startRecur', 'Дата конца рекурсии должна быть в формате даты').optional().isISO8601(),
+    body('endRecur', 'Дата конца рекурсии должна быть в формате даты').optional().isISO8601(),
+    body('color', 'Цвет должен быть в формате HEX').optional().isHexColor(),
+    body('groupId', 'Групповой ID не должен быть пустым').optional().notEmpty()
+];
