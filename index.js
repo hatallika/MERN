@@ -1,10 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import fs from 'fs';
 import mongoose from "mongoose";
-import multer from 'multer';
-import {v4 as uuidv4} from 'uuid';
-import path from "path";
+import { avatarUpload, serviceImageUpload } from './config/multerConfig.js';
 
 import {
     registerValidation,
@@ -23,7 +20,6 @@ import {
 import {checkAuth, handleValidationErrors} from "./utils/index.js";
 import {
     UserController,
-    PostController,
     ServiceController,
     OnlineRehabilitationController,
     TrainingController,
@@ -35,6 +31,7 @@ import {
     ConsultationRecordController,
     PatientCardController
 } from './controllers/index.js';
+import {updateImage} from "./controllers/ServiceController.js";
 
 mongoose
 
@@ -46,42 +43,22 @@ mongoose
 
 const app = express();
 
-const storage = multer.diskStorage({
-    //путь
-    destination: (_, __, cb) => {
-        if (!fs.existsSync('uploads/avatars')) {
-            fs.mkdirSync('uploads/avatars');
-        }
-        cb(null, 'uploads/avatars');
-    },
-    //название файла
-    filename: (_, file, cb) => {
-        cb(null, `${uuidv4()}${path.extname(file.originalname)}`);
-    },
-});
-
-const upload = multer({storage});
-
-app.use(express.json()); //научить express читать json
+app.use(express.json());
 app.use(cors());
-app.use('/uploads', express.static('uploads')); //читать uploads папку
+app.use('/uploads', express.static('uploads'));
+app.use('/uploads/images/services', express.static('uploads'));
 
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
 app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register);
 app.get('/auth/me', checkAuth, UserController.getMe);
 app.get('/users', checkAuth, UserController.getAll);
 
-//получение тегов
-app.get('/tags', PostController.getLastTags);
-//роут Стаьи
-app.get('/posts', PostController.getAll);
-app.get('/posts/:id', PostController.getOne);
-
-//Услуги
+//УСЛУГИ
 app.get('/services', ServiceController.getAll);
-app.get('/services/popular', ServiceController.getByRating);
-app.get('/services/:id', ServiceController.getOne);
-app.post('/services', checkAuth, serviceCreateValidation, handleValidationErrors, ServiceController.create);
+app.post('/admin/services/newService', checkAuth, serviceCreateValidation, handleValidationErrors, ServiceController.create);
+app.delete('/admin/services/removeService/:id', checkAuth, handleValidationErrors, ServiceController.remove);
+app.patch('/admin/services/updateService/:id', checkAuth, serviceCreateValidation, handleValidationErrors, ServiceController.update);
+app.patch('/admin/services/updateImage/:id', checkAuth, serviceImageUpload.single('image'), ServiceController.updateImage);
 
 //Онлайн-реабилитация
 app.get('/online-rehabilitation', OnlineRehabilitationController.getAll);
@@ -103,22 +80,20 @@ app.patch('/admin/customers/:cardId', handleValidationErrors, PatientCardControl
 app.post('/admin/customers/newCustomer', createNewUserValidation, handleValidationErrors, UserController.createUserAndGeneratePassword)
 app.delete('/admin/customers/removeCustomer/:id', checkAuth, handleValidationErrors, UserController.remove);
 
-//ADMIN-- СПЕЦИАЛИСТЫ
+//ADMIN -- СПЕЦИАЛИСТЫ -- SPECIALISTS
 app.post('/admin/specialists/newEmployer', handleValidationErrors, EmployerController.create);
-app.delete('/admin/specialists/removeEmployer/:id', handleValidationErrors, EmployerController.remove);
+app.delete('/admin/specialists/removeEmployer/:id', checkAuth, handleValidationErrors, EmployerController.remove);
 app.patch('/admin/specialists/updateEmployer/:id', handleValidationErrors, UserController.updateEmployer)
 
-//ADMIN-- РАСПИСАНИЕ
+//РАСПИСАНИЕ
 app.post('/admin/specialists/:employerId/schedules', ScheduleCreateValidation, handleValidationErrors, ScheduleController.create);
 app.get('/admin/specialists/schedules', handleValidationErrors, ScheduleController.getAll);
-app.delete(`/admin/schedules/:scheduleId`,handleValidationErrors, ScheduleController.remove);
+app.patch('/admin/schedules/:scheduleId', handleValidationErrors, ScheduleController.update);
+app.delete(`/admin/schedules/:scheduleId`, checkAuth, handleValidationErrors, ScheduleController.remove);
 
-//СОТРУДНИКИ -- ADMIN - SPECIALISTS
+//СОТРУДНИКИ
 app.get('/employers', handleValidationErrors, UserController.getAllEmployers);
-// app.get('/employers', EmployerController.getAll);
-// app.get('/employers/:id', EmployerController.getOne);
-// app.delete('/employers/:id', checkAuth, EmployerController.remove);
-// app.patch('/employers/:id', checkAuth, employerCreateValidation, handleValidationErrors, EmployerController.update);
+
 
 app.get('/customers/:id', CustomerController.getOne);
 app.get('/customer/byemail', CustomerController.getOneByEmail); //для клиентской базы
@@ -130,7 +105,7 @@ app.get('/customers/byuser/:user', checkAuth, CustomerController.findByUser); //
 app.post('/customers', customerCreateValidation, handleValidationErrors, CustomerController.create);
 app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
 app.get('/profile', CustomerController.getAll);
-app.patch('/profile/updateAvatar/:id', checkAuth, upload.single('image'), UserController.updateAvatar); //ЗАГРУЗКА АВАТАРКИ (с заменой)
+app.patch('/profile/updateAvatar/:id', checkAuth, avatarUpload.single('image'), UserController.updateAvatar); //ЗАГРУЗКА АВАТАРКИ (с заменой)
 
 //Тренировки
 app.get('/training', TrainingController.getCatalog);
