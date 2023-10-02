@@ -35,9 +35,9 @@ export const create = async (req, res) => {
 
 export const getAll = async (req, res) => {
     try {
-        const workTime = await ScheduleModel.find().exec();
+        const schedule = await ScheduleModel.find().exec();
 
-        res.json(workTime);
+        res.json(schedule);
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -72,31 +72,24 @@ export const remove = async (req, res) => {
 
 export const update = async (req, res) => {
     try {
-        const workTimeId = req.params.id;
+        const scheduleId = req.params.scheduleId;
+        const editedSchedule = req.body
 
-        await ScheduleModel.updateOne(
-            {
-                _id: workTimeId,
-            },
-            {
-                employer: req.body.employer,
-                dateTime: req.body.dateTime,
-            },
-        ).then(() => {
-            res.json({
-                access: true,
-            });
-        }).catch(err => {
-            console.log(err);
-            res.status(404).json({
-                message: 'Рабочее время не найдено для обновления'
-            });
+        const updatedSchedule = await ScheduleModel.findOneAndUpdate(
+            {_id: scheduleId},
+            editedSchedule,
+            {new: true}
+        );
+
+        res.json({
+            updatedSchedule: updatedSchedule,
+            message: 'Расписание обновлено!'
         });
 
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось обновить рабочее время',
+            message: 'Не удалось обновить расписание!',
         });
     }
 }

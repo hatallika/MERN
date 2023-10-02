@@ -152,7 +152,6 @@ export const getAllEmployers = async (req, res) => {
     }
 }
 
-
 export const getAllCustomers = async (req, res) => {
     try {
         const customers = await UserModel.aggregate([
@@ -211,18 +210,22 @@ export const updateAvatar = async (req, res) => {
         // Удаляем старую аватарку, если она была
         if (user.avatarUrl) {
             const existingAvatarPath = path.join('uploads/avatars', path.basename(user.avatarUrl));
-            fs.unlinkSync(existingAvatarPath);
+
+            setTimeout(() => {
+                // Удаление старого изображения после задержки в 5 секунд
+                fs.unlinkSync(existingAvatarPath);
+            }, 2000);
         }
 
         user.avatarUrl = avatarUrl;
         await user.save();
 
-        return res.json({message: 'Аватарка успешно обновлена', avatarUrl: user.avatarUrl});
+        return res.json({message: 'Аватарка успешно обновлена', imageUrl: user.avatarUrl});
 
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось обновить сотрудников',
+            message: 'Не удалось загрузить аватар!',
         });
     }
 }

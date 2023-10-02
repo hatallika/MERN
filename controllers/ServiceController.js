@@ -1,9 +1,34 @@
 import ServiceModel from '../models/Service.js';
+import ScheduleModel from "../models/Schedule.js";
+import path from "path";
+import fs from "fs";
 
+export const create = async (req, res) => {
+
+    const {name, description, recommendations} = req.body
+
+    try {
+        const service = new ServiceModel({
+            name: name,
+            description: description,
+            recommendations: recommendations,
+            // imageUrl: req.body.imageUrl
+        });
+
+        const newService = await service.save();
+
+        res.status(200).json({message: 'Услуга успешно добавлена!', service: newService})
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось создать услугу',
+        });
+    }
+}
 
 export const getAll = async (req, res) => {
     try {
-        const services = await ServiceModel.find().populate('employer').exec();
+        const services = await ServiceModel.find().exec();
 
         res.json(services);
     } catch (err) {
@@ -14,136 +39,86 @@ export const getAll = async (req, res) => {
     }
 }
 
-export const getOne = async (req, res) => {
+export const update = async (req, res) => {
     try {
-        const postId = req.params.id; //вытащили динамический параметр из запроса /posts/:id
+        const serviceId = req.params.id;
+        const editedService = req.body
 
-        ServiceModel.findOneAndUpdate(
-            {
-                _id: postId, // найти по id
-            },
-            {
-                $inc: { viewsCount: 1 }, //что обновить и на какое значение.
-            },
-            {
-                returnDocument: 'after', //вернуть документ после обновления
-            },
+        const updatedService = await ServiceModel.findByIdAndUpdate(
+            {_id: serviceId},
+            editedService,
+            {new: true}
+        );
 
-        ).then(
-            doc => {
-                res.json(doc);//вернем документ (статья)
-            },
-        ).catch(err => {
-            console.log(err);
-            return res.status(404).json({
-                message: 'Услуга не найдена',
-            });
+        res.json({
+            updatedSchedule: updatedService,
+            message: 'Расписание обновлено!'
         });
+
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось получить данные об услуге'
-        });
-    }
-};
-//популярные услуги по рейтингу
-export const getByRating = async (req, res) => {
-    try {
-        const services = await ServiceModel.find().sort({rating: -1}).limit(3);
-
-        res.json(services);
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({
-            message: 'Не удалось получить писок услуг',
+            message: 'Не удалось обновить данные услуги',
         });
     }
 }
-
-
-
 
 export const remove = async (req, res) => {
     try {
         const serviceId = req.params.id;
 
-        ServiceModel.findOneAndDelete({
-            _id: serviceId,
-        }, ).then( () => {
-            res.json({
-                success:true,
-            })
-        }).catch(err => {
-            console.log(err);
-            res.status(404).json({
-                message: 'Услуга не найдена'
+        if (!serviceId) {
+            return res.status(404).json({
+                message: 'Услуга не найдена!'
             });
-        });
-    } catch(err){
-        console.log(err);
-        res.join({
-            message: 'Не удалось удалить Услугу'
-        })
-    }
-}
+        }
 
-export const create = async (req, res) => {
-    try {
-        const doc = new ServiceModel({
-            name: req.body.name,
-            description: req.body.description,
-            text: req.body.text,
-            imageUrl: req.body.imageUrl,
-            tags: req.body.tags,
-            price: req.body.price,
-            rating:req.body.rating,
-            user: req.userId, // сотрудник, не из запроса пользователя, а с бекенда из проверки на авторизацию (checkAuth.js)
-            employer: req.body.employer,
+        await ServiceModel.findByIdAndDelete(serviceId);
+
+        res.json({
+            success: true,
+            message: 'Услуга удалена!'
         });
 
-        const service = await doc.save();
-        res.json(service);
-    } catch (err){
+    } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось создать услугу',
+            message: 'Не удалось удалить услугу!',
         });
     }
 }
 
-export const update = async (req, res) => {
+export const updateImage = async (req, res) => {
     try {
         const serviceId = req.params.id;
 
-        await  ServiceModel.updateOne(
-            {
-                _id: serviceId,
-            },
-            {
-                name: req.body.name,
-                description: req.body.description,
-                text: req.body.text,
-                imageUrl: req.body.imageUrl,
-                tags: req.body.tags,
-                price: req.body.price,
-                rating:req.body.rating,
-                employer: req.body.employer,
-            },
-        ).then(() => {
-            res.json({
-                access: true,
-            });
-        }).catch(err => {
-            console.log(err);
-            res.status(404).json({
-                message: 'Услуга не найдена'
-            });
-        });
+        const imageUrl = `/uploads/images/services/${path.basename(req.file.filename)}`;
 
-    } catch (err){
+        const service = await ServiceModel.findById(serviceId);
+
+        if (!service) {
+            return res.status(400).json({
+                message: 'Услуга не найдена!',
+            });
+        }
+
+        if (service.imageUrl) {  // удаляем старую пикчу
+            const existingImagePath = path.join('uploads/images/services', path.basename(service.imageUrl));
+
+            setTimeout(() => {
+                fs.unlinkSync(existingImagePath);
+            }, 2000);
+        }
+
+        service.imageUrl = imageUrl;
+        await service.save();
+
+        return res.json({message: 'Картинка успешно обновлена', imageUrl: service.imageUrl});
+
+    } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось обновить данные услуги',
+            message: 'Не удалось загрузить картинку!',
         });
     }
 }
