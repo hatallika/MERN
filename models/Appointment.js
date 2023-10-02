@@ -13,11 +13,11 @@ const AppointmentSchema = new mongoose.Schema({
         },
         patronymic: String, // фамилия, если понадобится
 
-        user: { //если авторизован, кто создал встречу User auth
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User', //relationship: свойство ссылается на модель User
-            required: false,
-        },
+        // user: { //если авторизован, кто создал встречу User auth
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     ref: 'User', //relationship: свойство ссылается на модель User
+        //     required: false,
+        // },
         phone: {
             type: String,
             required: true, // false?//достаточно ли email?
@@ -28,13 +28,18 @@ const AppointmentSchema = new mongoose.Schema({
         },
         service: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Service', //relationship: свойство ссылается на модель User
-            required: true,
+            ref: 'Service', //relationship: свойство ссылается на модель Service
+            required: false,
         },
         employer: { //User - role: employer
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User', //relationship: свойство ссылается на модель User
-            required: true,
+            required: false,
+        },
+        onlineRehabilitation: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'OnlineRehabilitation', //relationship: свойство ссылается на модель OnlineRehabilitation
+            required: false,
         },
         customer: { //User - role: customer
             type: mongoose.Schema.Types.ObjectId,
@@ -42,10 +47,17 @@ const AppointmentSchema = new mongoose.Schema({
             required: false,
         },
         text: 'String', //TODO валидация
-        dateTime: { // Из формы идет формат "2023-04-24 15:00"
-            type: Date,
-            required: true,
+        // dateTime: { // Из формы идет формат "2023-04-24 15:00"
+        //     type: Date,
+        //     required: false,
+        // },
+        status: {
+            type: String,
+            enum: ['Ждет ответ', 'Назначен прием', 'Прием состоялся', 'Прием не состоялся'],
+            default: 'Открыто',
         },
+        //Название источника обращения, указанное в форме (Откуда форма: Специалисты, Услуги, Онлайн-реабилитация, ...)
+        source_name: 'String'
     },
     {
         timestamps: true,
