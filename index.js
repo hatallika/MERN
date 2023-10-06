@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import mongoose from "mongoose";
-import { avatarUpload, serviceImageUpload } from './config/multerConfig.js';
+import {avatarUpload, serviceImageUpload, trainingImageUpload} from './config/multerConfig.js';
 
 import {
     registerValidation,
@@ -31,7 +31,6 @@ import {
     ConsultationRecordController,
     PatientCardController
 } from './controllers/index.js';
-import {updateImage} from "./controllers/ServiceController.js";
 
 mongoose
 
@@ -94,7 +93,6 @@ app.delete(`/admin/schedules/:scheduleId`, checkAuth, handleValidationErrors, Sc
 //СОТРУДНИКИ
 app.get('/employers', handleValidationErrors, UserController.getAllEmployers);
 
-
 app.get('/customers/:id', CustomerController.getOne);
 app.get('/customer/byemail', CustomerController.getOneByEmail); //для клиентской базы
 app.get('/customer/byphone', CustomerController.getOneByPhone); //для клиентской базы
@@ -107,11 +105,19 @@ app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidatio
 app.get('/profile', CustomerController.getAll);
 app.patch('/profile/updateAvatar/:id', checkAuth, avatarUpload.single('image'), UserController.updateAvatar); //ЗАГРУЗКА АВАТАРКИ (с заменой)
 
-//Тренировки
-app.get('/training', TrainingController.getCatalog);
-app.get('/training/:id', TrainingController.getVideos);
-app.post('/training', catalogVideoCreateValidation, handleValidationErrors, TrainingController.createCatalog);
-app.post('/video', videoCreateValidation, handleValidationErrors, TrainingController.createVideo);
+//ТРЕНИРОВКИ - КАТАЛОГ - ВИДЕО
+app.get('/training', TrainingController.getCatalogs);
+// app.get('/training/:id', TrainingController.getVideos);
+// КАТАЛОГ
+app.post('/admin/training/newCatalog', checkAuth, catalogVideoCreateValidation, handleValidationErrors, TrainingController.createCatalog);
+app.delete(`/admin/training/:id`, checkAuth, handleValidationErrors, TrainingController.remove);
+app.patch('/admin/training/updateCatalog/:id', checkAuth, catalogVideoCreateValidation, handleValidationErrors, TrainingController.updateCatalog);
+app.patch('/admin/training/updateImage/:id', checkAuth, trainingImageUpload.single('image'), TrainingController.updateImage);
+
+//ВИДЕО
+app.post('/admin/training/newVideo', checkAuth, videoCreateValidation, handleValidationErrors, TrainingController.createVideo);
+app.delete(`/admin/training/removeVideo/:id`, checkAuth, handleValidationErrors, TrainingController.removeVideo);
+
 
 //ИЗМЕНЕНИЕ ПАРОЛЯ ДЛЯ НОВОГО ПОЛЬЗОВАТЕЛЯ -- Сброс пароля
 app.patch('/resetPassword/:token', handleValidationErrors, UserController.resetPassword)
