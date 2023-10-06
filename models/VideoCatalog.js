@@ -23,7 +23,10 @@ const VideoCatalogSchema = new mongoose.Schema(
                 }
             ],
 
-        imageUrl: String,
+        imageUrl: {
+            type: String,
+            default: ""
+        }
     },
     {
         timestamps: true

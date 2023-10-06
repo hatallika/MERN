@@ -29,5 +29,19 @@ const serviceImageStorage = multer.diskStorage({
     },
 });
 
+const trainingImageStorage = multer.diskStorage({
+    destination: (_, __, cb) => {
+        const dir = 'uploads/images/training';
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        cb(null, dir);
+    },
+    filename: (_, file, cb) => {
+        cb(null, `${uuidv4()}${path.extname(file.originalname)}`);
+    },
+});
+
 export const avatarUpload = multer({storage: avatarStorage});
 export const serviceImageUpload = multer({storage: serviceImageStorage});
+export const trainingImageUpload = multer({storage: trainingImageStorage});
