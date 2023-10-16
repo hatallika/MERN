@@ -15,7 +15,7 @@ import {
     consultationRecordCreateValidation,
     createPatientCardValidation,
     createNewUserValidation,
-    ScheduleCreateValidation,
+    ScheduleCreateValidation, eventCreateValidation,
 } from "./validations/validations.js";
 import {checkAuth, handleValidationErrors} from "./utils/index.js";
 import {
@@ -29,7 +29,8 @@ import {
     ScheduleController,
     ConsultationTopicController,
     ConsultationRecordController,
-    PatientCardController
+    PatientCardController,
+    EventController,
 } from './controllers/index.js';
 import {deleteProfile} from "./controllers/UserController.js";
 
@@ -133,6 +134,12 @@ app.post('/appointments', appointmentCreateValidation, handleValidationErrors, A
 app.delete('/appointments/:id', checkAuth, AppointmentController.remove);
 app.patch('/appointments/:id', checkAuth, appointmentCreateValidation, handleValidationErrors, AppointmentController.update);
 app.get('/appointments/employer/:id', AppointmentController.getByEmployer);
+
+//События для календаря
+app.get('/events', EventController.getAllFromAppointments);
+app.post('/events', eventCreateValidation, handleValidationErrors, EventController.create);
+    app.get('/events/employer/:id', EventController.getByEmployer);
+
 
 //Сервер
 app.listen(process.env.PORT || 4444, (err) => { //запустить сервер

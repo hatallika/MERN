@@ -117,7 +117,8 @@ export const create = async (req, res) => {
             text: req.body.text,
             // dateTime: req.body.dateTime,
             status: 'Ждет ответ',
-            source_name: req.body.source_name
+            source_name: req.body.source_name,
+            eventId: req.body.eventId
         });
 
         const appointment = await doc.save();
@@ -150,6 +151,8 @@ export const update = async (req, res) => {
                 employer: req.body.employer,
                 // dateTime: req.body.dateTime,
                 status: req.body.status,
+                eventId: req.body.eventId
+
             },
         ).then(() => {
             res.json({
@@ -169,3 +172,4 @@ export const update = async (req, res) => {
         });
     }
 }
+

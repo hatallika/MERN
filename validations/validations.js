@@ -63,6 +63,12 @@ export const appointmentCreateValidation = [
     // body('dateTime', 'Выберите дату и время').isISO8601().toDate(),
 ]
 
+export const eventCreateValidation = [
+    body('start', 'Выберите дату начала события').isISO8601().toDate(),
+    body('end', 'Выберите дату завершения события').isISO8601().toDate(),
+    body('title', 'Введите название события').isLength({min: 3}).isString(),
+]
+
 export const consultationRecordCreateValidation = [
     body('topic', 'Введите описание достижений').isLength({min: 3}).isString(),
     body('clientName', 'Введите описание карточки врача').isLength({min: 3}),

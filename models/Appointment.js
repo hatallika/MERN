@@ -57,7 +57,12 @@ const AppointmentSchema = new mongoose.Schema({
             default: 'Открыто',
         },
         //Название источника обращения, указанное в форме (Откуда форма: Специалисты, Услуги, Онлайн-реабилитация, ...)
-        source_name: 'String'
+        source_name: 'String',
+        eventId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Event', //relationship: свойство ссылается на модель User
+            required: false,
+        }
     },
     {
         timestamps: true,
