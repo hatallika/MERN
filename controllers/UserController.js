@@ -180,19 +180,6 @@ export const getAllCustomers = async (req, res) => {
     }
 }
 
-export const getEmployers = async (req, res) => {
-    try {
-        const employers = await UserModel.find({'role': 'employer'}).populate('employer').exec(); //связь с employer
-
-        res.json(employers);
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({
-            message: 'Не удалось получить сотрудников',
-        });
-    }
-}
-
 export const updateAvatar = async (req, res) => {
     try {
         const userId = req.params.id;
@@ -393,8 +380,70 @@ export const remove = async (req, res) => {
         });
     } catch (err) {
         console.log(err);
-        res.join({
+        res.json({
             message: 'Не удалось удалить пациента'
         })
+    }
+}
+
+export const changePassword = async (req, res) => {
+
+    const userId = req.userId
+
+    const {oldPassword, newPassword} = req.body;
+
+    try {
+        const user = await UserModel.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({message: 'Пользователь не найден!'});
+        }
+
+        const isValidPass = await bcrypt.compare(oldPassword, user._doc.passwordHash); //сравниваем олдпас
+
+        if (!isValidPass) {
+            return res.status(400).json({
+                message: 'Некорректно введен текущий пароль!',
+            });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+
+        user.passwordHash = await bcrypt.hash(newPassword, salt);
+
+        await user.save();
+
+        res.status(200).json({message: 'Пароль успешно обновлен!'});
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось обновить пароль пользователя!',
+        });
+    }
+}
+
+export const deleteProfile = async (req, res) => {
+
+    try {
+        const user = await UserModel.findOneAndDelete({ _id: req.userId });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Пользователь не найден!'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Профиль успешно удален!'
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: 'Не удалось удалить пользователя'
+        });
     }
 }

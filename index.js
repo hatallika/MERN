@@ -31,6 +31,7 @@ import {
     ConsultationRecordController,
     PatientCardController
 } from './controllers/index.js';
+import {deleteProfile} from "./controllers/UserController.js";
 
 mongoose
 
@@ -104,6 +105,8 @@ app.post('/customers', customerCreateValidation, handleValidationErrors, Custome
 app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
 app.get('/profile', CustomerController.getAll);
 app.patch('/profile/updateAvatar/:id', checkAuth, avatarUpload.single('image'), UserController.updateAvatar); //ЗАГРУЗКА АВАТАРКИ (с заменой)
+app.patch('/profile/changePassword/', checkAuth, UserController.changePassword);
+app.delete('/profile/delete/', checkAuth, handleValidationErrors, UserController.deleteProfile);
 
 //ТРЕНИРОВКИ - КАТАЛОГ - ВИДЕО
 app.get('/training', TrainingController.getCatalogs);
