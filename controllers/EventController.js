@@ -1,31 +1,6 @@
 import EventModel from "../models/Event.js";
-import AppointmentModel from "../models/Appointment.js";
-import mongoose from "mongoose";
-
-//Получить события из заявок на прием (Appointments)
-export const getAllFromAppointments = async (req, res) => {
-    try {
-        const eventsWithAppointment = await EventModel.aggregate([
-            {
-                $lookup: {
-                    from: 'appointments',
-                    localField: '_id',
-                    foreignField: 'eventId',
-                    as: 'appointment'
-                }
-            },
-            {
-                $unwind: '$appointment'
-            }
-        ]);
-        res.json(eventsWithAppointment);
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({
-            message: 'Не удалось получить список событий из заявок',
-        });
-    }
-}
+// Если понадобится разделить Appointments на Заявки на прием и События в календаре.
+// import mongoose from "mongoose";
 
 export const create = async (req, res) => {
     try {
@@ -102,39 +77,39 @@ export const remove = async (req, res) => {
     }
 }
 
-export const getByEmployer = async (req, res) => {
-    try {
-        const employerId = req.params.id; //вытащили динамический параметр из запроса
-        const eventsWithAppointment = await EventModel.aggregate([
-            {
-
-                // new mongoose.Types.ObjectId('64e87b84cfd59462534dd128')
-                $lookup: {
-                    from: 'appointments',
-                    localField: '_id',
-                    foreignField: 'eventId',
-                    as: 'appointment',
-
-                    //добавили условие
-                    pipeline: [ {
-                        $match: {
-                            $expr: { $eq: [ "$employer", new mongoose.Types.ObjectId(employerId)] }
-                        }
-                    } ],
-                }
-            },
-            {
-                $unwind: '$appointment'
-            },
-
-        ]);
-        res.json(eventsWithAppointment);
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({
-            message: 'Не удалось получить список событий из заявок',
-        });
-    }
-
-};
+//пример агрегации по нескольким условиям
+// export const getByEmployer = async (req, res) => {
+//     try {
+//         const employerId = req.params.id; //вытащили динамический параметр из запроса
+//         const eventsWithAppointment = await EventModel.aggregate([
+//             {
+//
+//                 // new mongoose.Types.ObjectId('64e87b84cfd59462534dd128')
+//                 $lookup: {
+//                     from: 'appointments',
+//                     localField: '_id',
+//                     foreignField: 'eventId',
+//                     as: 'appointment',
+//
+//                     //добавили условие
+//                     pipeline: [ {
+//                         $match: {
+//                             $expr: { $eq: [ "$employer", new mongoose.Types.ObjectId(employerId)] }
+//                         }
+//                     } ],
+//                 }
+//             },
+//             {
+//                 $unwind: '$appointment'
+//             },
+//
+//         ]);
+//         res.json(eventsWithAppointment);
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).json({
+//             message: 'Не удалось получить список событий из заявок',
+//         });
+//     }
+// };
 

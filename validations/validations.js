@@ -100,3 +100,7 @@ export const ScheduleCreateValidation = [
     body('color', 'Цвет должен быть в формате HEX').optional().isHexColor(),
     body('groupId', 'Групповой ID не должен быть пустым').optional().notEmpty()
 ];
+
+export const appointmentEmpValidation = [
+
+]

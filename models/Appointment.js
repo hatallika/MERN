@@ -54,15 +54,24 @@ const AppointmentSchema = new mongoose.Schema({
         status: {
             type: String,
             enum: ['Ждет ответ', 'Назначен прием', 'Прием состоялся', 'Прием не состоялся'],
-            default: 'Открыто',
+            default: 'Ждет ответ',
         },
         //Название источника обращения, указанное в форме (Откуда форма: Специалисты, Услуги, Онлайн-реабилитация, ...)
         source_name: 'String',
-        eventId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Event', //relationship: свойство ссылается на модель User
+        start: {
+            type: Date,
             required: false,
+        },
+        end: {
+            type: Date,
+            required: false,
+        },
+        //Опубликована ли заявка для календаря, так как статус не однозначен(может меняться), чтобы по нему выстраивать отображение в календаре.
+        public: {
+            type: Boolean,
+            default: false,
         }
+
     },
     {
         timestamps: true,

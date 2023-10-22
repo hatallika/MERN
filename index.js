@@ -136,9 +136,9 @@ app.patch('/appointments/:id', checkAuth, appointmentCreateValidation, handleVal
 app.get('/appointments/employer/:id', AppointmentController.getByEmployer);
 
 //События для календаря
-app.get('/events', EventController.getAllFromAppointments);
-app.post('/events', eventCreateValidation, handleValidationErrors, EventController.create);
-    app.get('/events/employer/:id', EventController.getByEmployer);
+// app.get('/events', EventController.getAllFromAppointments);
+// app.post('/events', eventCreateValidation, handleValidationErrors, EventController.create);
+//     app.get('/events/employer/:id', EventController.getByEmployer);
 
 
 //Сервер
