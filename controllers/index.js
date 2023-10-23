@@ -10,3 +10,4 @@ export * as ScheduleController from "./ScheduleController.js";
 export * as ConsultationTopicController from "./ConsultationTopicController.js";
 export * as ConsultationRecordController from "./ConsultationRecordController.js";
 export * as PatientCardController from "./PatientCardController.js";
+export * as EventController from "./EventController.js";

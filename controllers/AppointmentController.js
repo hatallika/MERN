@@ -47,10 +47,10 @@ export const getByEmployer = async (req, res) => {
     try {
         const employerId = req.params.id; //вытащили динамический параметр из запроса
 
-
         AppointmentModel.find(
             {
                 'employer': employerId, // найти по id
+                'public': true, // только опубликованные в календарь
             },
         ).then(
             doc => {
@@ -115,9 +115,11 @@ export const create = async (req, res) => {
             employer: req.body.employer,
             onlineRehabilitation: req.body.onlineRehabilitation,
             text: req.body.text,
-            // dateTime: req.body.dateTime,
-            status: 'Ждет ответ',
-            source_name: req.body.source_name
+            start: req.body.start,
+            end: req.body.end,
+            status: req.body.status,
+            source_name: req.body.source_name,
+            public: req.body.public,
         });
 
         const appointment = await doc.save();
@@ -148,8 +150,13 @@ export const update = async (req, res) => {
                 service: req.body.service,
                 customer: req.body.customer,
                 employer: req.body.employer,
-                // dateTime: req.body.dateTime,
+                onlineRehabilitation: req.body.onlineRehabilitation,
+                text: req.body.text,
+                start: req.body.start,
+                end: req.body.end,
                 status: req.body.status,
+                source_name: req.body.source_name,
+                public: req.body.public,
             },
         ).then(() => {
             res.json({
