@@ -23,7 +23,6 @@ export const getOne = async (req, res) => {
             {
                 _id: appointmentId, // найти по id
             },
-
         ).populate('service').then(
             doc => {
                 // console.log(doc);
@@ -76,9 +75,9 @@ export const remove = async (req, res) => {
 
         AppointmentModel.findOneAndDelete({
             _id: appointmentId,
-        }, ).then( () => {
+        },).then(() => {
             res.json({
-                success:true,
+                success: true,
             })
         }).catch(err => {
             console.log(err);
@@ -86,7 +85,7 @@ export const remove = async (req, res) => {
                 message: 'Запись не найдена'
             });
         });
-    } catch(err){
+    } catch (err) {
         console.log(err);
         res.join({
             message: 'Не удалось удалить запись'
@@ -106,7 +105,7 @@ export const create = async (req, res) => {
         const doc = new AppointmentModel({
             firstName: req.body.firstName,
             secondName: req.body.secondName,
-            patronymic: req.body.patronymic,
+            middleName: req.body.middleName,
             phone: req.body.phone,
             email: req.body.email,
             // user: req.userId,
@@ -124,7 +123,7 @@ export const create = async (req, res) => {
 
         const appointment = await doc.save();
         res.json(appointment);
-    } catch (err){
+    } catch (err) {
         console.log(err);
         res.status(500).json({
             message: 'Не удалось создать запись',
@@ -136,17 +135,14 @@ export const update = async (req, res) => {
     try {
         const customerId = req.params.id;
 
-        await  AppointmentModel.updateOne(
-            {
-                _id: customerId,
-            },
+        await AppointmentModel.updateOne(
+            {_id: customerId},
             {
                 firstName: req.body.firstName,
                 secondName: req.body.secondName,
-                patronymic: req.body.patronymic,
+                middleName: req.body.middleName,
                 phone: req.body.phone,
                 email: req.body.email,
-                // user: req.userId,
                 service: req.body.service,
                 customer: req.body.customer,
                 employer: req.body.employer,
@@ -161,6 +157,7 @@ export const update = async (req, res) => {
         ).then(() => {
             res.json({
                 access: true,
+                message: 'Прием назначен!'
             });
         }).catch(err => {
             console.log(err);
@@ -169,7 +166,7 @@ export const update = async (req, res) => {
             });
         });
 
-    } catch (err){
+    } catch (err) {
         console.log(err);
         res.status(500).json({
             message: 'Не удалось обновить запись',

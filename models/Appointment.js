@@ -11,7 +11,7 @@ const AppointmentSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
-        patronymic: String, // фамилия, если понадобится
+        middleName: String, // отчество, если понадобится
 
         // user: { //если авторизован, кто создал встречу User auth
         //     type: mongoose.Schema.Types.ObjectId,
