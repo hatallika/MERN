@@ -15,7 +15,7 @@ import {
     consultationRecordCreateValidation,
     createPatientCardValidation,
     createNewUserValidation,
-    ScheduleCreateValidation, eventCreateValidation,
+    ScheduleCreateValidation,
 } from "./validations/validations.js";
 import {checkAuth, handleValidationErrors} from "./utils/index.js";
 import {
@@ -30,9 +30,7 @@ import {
     ConsultationTopicController,
     ConsultationRecordController,
     PatientCardController,
-    EventController,
 } from './controllers/index.js';
-import {deleteProfile} from "./controllers/UserController.js";
 
 mongoose
 
@@ -102,7 +100,7 @@ app.delete('/customers/:id', checkAuth, CustomerController.remove);
 app.get('/customers/byuser/:user', checkAuth, CustomerController.findByUser); //есть ли такой пользователь в полкупателях
 
 //ПРОФИЛЬ --- СОЗДАНИЕ customer ОБНОВЛЕНИЕ ДАННЫХ
-app.post('/customers', customerCreateValidation, handleValidationErrors, CustomerController.create);
+app.post('/customers', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.create);
 app.patch('/customers/:id', checkAuth, customerCreateValidation, handleValidationErrors, CustomerController.update);
 app.get('/profile', CustomerController.getAll);
 app.patch('/profile/updateAvatar/:id', checkAuth, avatarUpload.single('image'), UserController.updateAvatar); //ЗАГРУЗКА АВАТАРКИ (с заменой)
@@ -111,7 +109,7 @@ app.delete('/profile/delete/', checkAuth, handleValidationErrors, UserController
 
 //ТРЕНИРОВКИ - КАТАЛОГ - ВИДЕО
 app.get('/training', TrainingController.getCatalogs);
-// app.get('/training/:id', TrainingController.getVideos);
+
 // КАТАЛОГ
 app.post('/admin/training/newCatalog', checkAuth, catalogVideoCreateValidation, handleValidationErrors, TrainingController.createCatalog);
 app.delete(`/admin/training/:id`, checkAuth, handleValidationErrors, TrainingController.remove);
